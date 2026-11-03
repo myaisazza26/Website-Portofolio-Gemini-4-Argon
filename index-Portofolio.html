@@ -1,0 +1,1614 @@
+<!DOCTYPE html>
+<html lang="id" class="dark scroll-smooth"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aisyah Grisseeta Az-Zahra | 3D Interactive Portfolio &amp; UMG AccessHub</title>
+    <meta name="description" content="Portofolio 3D Interaktif resmi Aisyah Grisseeta Az-Zahra, Google Student Ambassador (#TeamGoogle - GSAID26B21662) &amp; Mahasiswa Tuli S1 Teknik Informatika UMG.">
+
+    <!-- Google Fonts: Inter, Plus Jakarta Sans & Atkinson Hyperlegible -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet">
+
+    <!-- FontAwesome 6.5.1 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                        accessible: ['Atkinson Hyperlegible', 'sans-serif'],
+                    },
+                    colors: {
+                        google: {
+                            blue: '#4285F4',
+                            red: '#EA4335',
+                            yellow: '#FBBC05',
+                            green: '#34A853',
+                        },
+                        umg: {
+                            primary: '#2563EB',
+                            accent: '#38BDF8'
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Glassmorphism & 3D Tilt Styles */
+        :root {
+            --font-scale: 1;
+        }
+        html {
+            font-size: calc(16px * var(--font-scale));
+        }
+        body.readable-font * {
+            font-family: 'Atkinson Hyperlegible', sans-serif !important;
+            letter-spacing: 0.02em;
+        }
+        body.high-contrast {
+            filter: contrast(1.22) saturate(1.15);
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        .dark .glass-panel {
+            background: rgba(15, 23, 42, 0.68);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        /* 3D Tilt Card Mechanics */
+        .tilt-card {
+            transform-style: preserve-3d;
+            transition: transform 0.15s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.3s ease;
+            will-change: transform;
+            position: relative;
+            overflow: hidden;
+        }
+        .tilt-inner {
+            transform: translateZ(28px);
+            transition: transform 0.2s ease;
+        }
+        .tilt-glare {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.22), transparent 65%);
+            opacity: 0;
+            transition: opacity 0.25s ease;
+            z-index: 20;
+        }
+
+        /* Visual Flash Alert for Deaf/Hard-of-Hearing Accessibility */
+        @keyframes visualRing {
+            0% { box-shadow: 0 0 0 0 rgba(66, 133, 244, 0.7); }
+            70% { box-shadow: 0 0 0 18px rgba(66, 133, 244, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(66, 133, 244, 0); }
+        }
+        .visual-alert-active {
+            animation: visualRing 1s ease-out;
+        }
+
+        /* Google Student Ambassador Diagonal Ribbon */
+        .gsa-ribbon {
+            background: linear-gradient(90deg, rgba(66,133,244,0.25) 0%, rgba(59,130,246,0.45) 50%, rgba(66,133,244,0.25) 100%);
+            transform: rotate(-16deg) scale(1.25);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.1);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #4285F4, #38BDF8);
+            border-radius: 9999px;
+        }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:Inter, sans-serif;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.pointer-events-none{pointer-events:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0px}.-bottom-1{bottom:-0.25rem}.-bottom-4{bottom:-1rem}.-left-16{left:-4rem}.-right-1{right:-0.25rem}.-right-24{right:-6rem}.-right-4{right:-1rem}.-top-24{top:-6rem}.bottom-28{bottom:7rem}.left-0{left:0px}.right-0{right:0px}.right-4{right:1rem}.top-0{top:0px}.top-20{top:5rem}.top-24{top:6rem}.z-10{z-index:10}.z-20{z-index:20}.z-40{z-index:40}.z-50{z-index:50}.col-span-2{grid-column:span 2 / span 2}.mx-auto{margin-left:auto;margin-right:auto}.my-1{margin-top:0.25rem;margin-bottom:0.25rem}.my-2\.5{margin-top:0.625rem;margin-bottom:0.625rem}.my-4{margin-top:1rem;margin-bottom:1rem}.mb-1{margin-bottom:0.25rem}.mb-2{margin-bottom:0.5rem}.mb-3{margin-bottom:0.75rem}.ml-1{margin-left:0.25rem}.ml-auto{margin-left:auto}.mr-1{margin-right:0.25rem}.mt-0\.5{margin-top:0.125rem}.mt-1{margin-top:0.25rem}.mt-2{margin-top:0.5rem}.mt-2\.5{margin-top:0.625rem}.block{display:block}.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.hidden{display:none}.h-10{height:2.5rem}.h-11{height:2.75rem}.h-12{height:3rem}.h-2{height:0.5rem}.h-20{height:5rem}.h-24{height:6rem}.h-3{height:0.75rem}.h-48{height:12rem}.h-56{height:14rem}.h-6{height:1.5rem}.h-7{height:1.75rem}.h-72{height:18rem}.h-9{height:2.25rem}.h-full{height:100%}.max-h-48{max-height:12rem}.min-h-\[290px\]{min-height:290px}.min-h-\[520px\]{min-height:520px}.min-h-\[78vh\]{min-height:78vh}.min-h-screen{min-height:100vh}.w-10{width:2.5rem}.w-11{width:2.75rem}.w-12{width:3rem}.w-2{width:0.5rem}.w-20{width:5rem}.w-24{width:6rem}.w-3{width:0.75rem}.w-6{width:1.5rem}.w-60{width:15rem}.w-7{width:1.75rem}.w-72{width:18rem}.w-9{width:2.25rem}.w-\[98\%\]{width:98%}.w-full{width:100%}.max-w-2xl{max-width:42rem}.max-w-3xl{max-width:48rem}.max-w-7xl{max-width:80rem}.max-w-\[400px\]{max-width:400px}.max-w-lg{max-width:32rem}.max-w-md{max-width:28rem}.max-w-sm{max-width:24rem}.shrink-0{flex-shrink:0}.translate-x-\[120\%\]{--tw-translate-x:120%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.-rotate-1{--tw-rotate:-1deg;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.transform{transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@keyframes bounce{0%, 100%{transform:translateY(-25%);animation-timing-function:cubic-bezier(0.8,0,1,1)}50%{transform:none;animation-timing-function:cubic-bezier(0,0,0.2,1)}}.animate-bounce{animation:bounce 1s infinite}@keyframes ping{75%, 100%{transform:scale(2);opacity:0}}.animate-ping{animation:ping 1s cubic-bezier(0, 0, 0.2, 1) infinite}.cursor-pointer{cursor:pointer}.scroll-mt-24{scroll-margin-top:6rem}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}.items-stretch{align-items:stretch}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:0.25rem}.gap-1\.5{gap:0.375rem}.gap-10{gap:2.5rem}.gap-2{gap:0.5rem}.gap-2\.5{gap:0.625rem}.gap-3{gap:0.75rem}.gap-3\.5{gap:0.875rem}.gap-4{gap:1rem}.gap-5{gap:1.25rem}.gap-6{gap:1.5rem}.gap-7{gap:1.75rem}.gap-8{gap:2rem}.space-y-10 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(2.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(2.5rem * var(--tw-space-y-reverse))}.space-y-2 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.5rem * var(--tw-space-y-reverse))}.space-y-24 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(6rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(6rem * var(--tw-space-y-reverse))}.space-y-3 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.75rem * var(--tw-space-y-reverse))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.space-y-6 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem * var(--tw-space-y-reverse))}.space-y-8 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(2rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(2rem * var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.overflow-y-auto{overflow-y:auto}.overflow-x-hidden{overflow-x:hidden}.scroll-smooth{scroll-behavior:smooth}.rounded{border-radius:0.25rem}.rounded-2xl{border-radius:1rem}.rounded-3xl{border-radius:1.5rem}.rounded-\[22px\]{border-radius:22px}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-xl{border-radius:0.75rem}.rounded-b{border-bottom-right-radius:0.25rem;border-bottom-left-radius:0.25rem}.border{border-width:1px}.border-2{border-width:2px}.border-4{border-width:4px}.border-b{border-bottom-width:1px}.border-l-4{border-left-width:4px}.border-t{border-top-width:1px}.border-t-4{border-top-width:4px}.border-amber-500\/30{border-color:rgb(245 158 11 / 0.3)}.border-blue-400{--tw-border-opacity:1;border-color:rgb(96 165 250 / var(--tw-border-opacity, 1))}.border-blue-500\/20{border-color:rgb(59 130 246 / 0.2)}.border-blue-500\/25{border-color:rgb(59 130 246 / 0.25)}.border-blue-500\/30{border-color:rgb(59 130 246 / 0.3)}.border-emerald-400{--tw-border-opacity:1;border-color:rgb(52 211 153 / var(--tw-border-opacity, 1))}.border-emerald-500\/30{border-color:rgb(16 185 129 / 0.3)}.border-sky-500\/30{border-color:rgb(14 165 233 / 0.3)}.border-slate-200{--tw-border-opacity:1;border-color:rgb(226 232 240 / var(--tw-border-opacity, 1))}.border-slate-200\/80{border-color:rgb(226 232 240 / 0.8)}.border-slate-300{--tw-border-opacity:1;border-color:rgb(203 213 225 / var(--tw-border-opacity, 1))}.border-slate-700{--tw-border-opacity:1;border-color:rgb(51 65 85 / var(--tw-border-opacity, 1))}.border-slate-800{--tw-border-opacity:1;border-color:rgb(30 41 59 / var(--tw-border-opacity, 1))}.border-stone-500\/40{border-color:rgb(120 113 108 / 0.4)}.border-white{--tw-border-opacity:1;border-color:rgb(255 255 255 / var(--tw-border-opacity, 1))}.border-white\/20{border-color:rgb(255 255 255 / 0.2)}.border-white\/25{border-color:rgb(255 255 255 / 0.25)}.border-white\/30{border-color:rgb(255 255 255 / 0.3)}.border-white\/40{border-color:rgb(255 255 255 / 0.4)}.border-white\/85{border-color:rgb(255 255 255 / 0.85)}.border-l-blue-500{--tw-border-opacity:1;border-left-color:rgb(59 130 246 / var(--tw-border-opacity, 1))}.border-t-amber-500{--tw-border-opacity:1;border-top-color:rgb(245 158 11 / var(--tw-border-opacity, 1))}.border-t-blue-500{--tw-border-opacity:1;border-top-color:rgb(59 130 246 / var(--tw-border-opacity, 1))}.border-t-pink-500{--tw-border-opacity:1;border-top-color:rgb(236 72 153 / var(--tw-border-opacity, 1))}.bg-amber-500\/10{background-color:rgb(245 158 11 / 0.1)}.bg-amber-500\/15{background-color:rgb(245 158 11 / 0.15)}.bg-amber-500\/20{background-color:rgb(245 158 11 / 0.2)}.bg-amber-600{--tw-bg-opacity:1;background-color:rgb(217 119 6 / var(--tw-bg-opacity, 1))}.bg-amber-700{--tw-bg-opacity:1;background-color:rgb(180 83 9 / var(--tw-bg-opacity, 1))}.bg-black\/40{background-color:rgb(0 0 0 / 0.4)}.bg-blue-500{--tw-bg-opacity:1;background-color:rgb(59 130 246 / var(--tw-bg-opacity, 1))}.bg-blue-500\/10{background-color:rgb(59 130 246 / 0.1)}.bg-blue-500\/15{background-color:rgb(59 130 246 / 0.15)}.bg-blue-500\/20{background-color:rgb(59 130 246 / 0.2)}.bg-blue-600{--tw-bg-opacity:1;background-color:rgb(37 99 235 / var(--tw-bg-opacity, 1))}.bg-blue-900\/60{background-color:rgb(30 58 138 / 0.6)}.bg-blue-950\/60{background-color:rgb(23 37 84 / 0.6)}.bg-emerald-400{--tw-bg-opacity:1;background-color:rgb(52 211 153 / var(--tw-bg-opacity, 1))}.bg-emerald-500\/10{background-color:rgb(16 185 129 / 0.1)}.bg-emerald-500\/15{background-color:rgb(16 185 129 / 0.15)}.bg-emerald-600{--tw-bg-opacity:1;background-color:rgb(5 150 105 / var(--tw-bg-opacity, 1))}.bg-indigo-500\/15{background-color:rgb(99 102 241 / 0.15)}.bg-pink-500\/15{background-color:rgb(236 72 153 / 0.15)}.bg-purple-500\/10{background-color:rgb(168 85 247 / 0.1)}.bg-purple-500\/15{background-color:rgb(168 85 247 / 0.15)}.bg-rose-500\/15{background-color:rgb(244 63 94 / 0.15)}.bg-slate-100{--tw-bg-opacity:1;background-color:rgb(241 245 249 / var(--tw-bg-opacity, 1))}.bg-slate-200{--tw-bg-opacity:1;background-color:rgb(226 232 240 / var(--tw-bg-opacity, 1))}.bg-slate-200\/70{background-color:rgb(226 232 240 / 0.7)}.bg-slate-50{--tw-bg-opacity:1;background-color:rgb(248 250 252 / var(--tw-bg-opacity, 1))}.bg-slate-800\/90{background-color:rgb(30 41 59 / 0.9)}.bg-slate-900{--tw-bg-opacity:1;background-color:rgb(15 23 42 / var(--tw-bg-opacity, 1))}.bg-slate-900\/40{background-color:rgb(15 23 42 / 0.4)}.bg-slate-900\/80{background-color:rgb(15 23 42 / 0.8)}.bg-slate-900\/85{background-color:rgb(15 23 42 / 0.85)}.bg-slate-900\/90{background-color:rgb(15 23 42 / 0.9)}.bg-slate-950{--tw-bg-opacity:1;background-color:rgb(2 6 23 / var(--tw-bg-opacity, 1))}.bg-slate-950\/60{background-color:rgb(2 6 23 / 0.6)}.bg-stone-800\/80{background-color:rgb(41 37 36 / 0.8)}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-white\/10{background-color:rgb(255 255 255 / 0.1)}.bg-white\/20{background-color:rgb(255 255 255 / 0.2)}.bg-white\/60{background-color:rgb(255 255 255 / 0.6)}.bg-gradient-to-b{background-image:linear-gradient(to bottom, var(--tw-gradient-stops))}.bg-gradient-to-br{background-image:linear-gradient(to bottom right, var(--tw-gradient-stops))}.bg-gradient-to-r{background-image:linear-gradient(to right, var(--tw-gradient-stops))}.bg-gradient-to-tr{background-image:linear-gradient(to top right, var(--tw-gradient-stops))}.from-amber-900\/80{--tw-gradient-from:rgb(120 53 15 / 0.8) var(--tw-gradient-from-position);--tw-gradient-to:rgb(120 53 15 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-blue-400{--tw-gradient-from:#60a5fa var(--tw-gradient-from-position);--tw-gradient-to:rgb(96 165 250 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-blue-500{--tw-gradient-from:#3b82f6 var(--tw-gradient-from-position);--tw-gradient-to:rgb(59 130 246 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-blue-600{--tw-gradient-from:#2563eb var(--tw-gradient-from-position);--tw-gradient-to:rgb(37 99 235 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-emerald-500{--tw-gradient-from:#10b981 var(--tw-gradient-from-position);--tw-gradient-to:rgb(16 185 129 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-pink-500{--tw-gradient-from:#ec4899 var(--tw-gradient-from-position);--tw-gradient-to:rgb(236 72 153 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-purple-600{--tw-gradient-from:#9333ea var(--tw-gradient-from-position);--tw-gradient-to:rgb(147 51 234 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-sky-300{--tw-gradient-from:#7dd3fc var(--tw-gradient-from-position);--tw-gradient-to:rgb(125 211 252 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-stone-700{--tw-gradient-from:#44403c var(--tw-gradient-from-position);--tw-gradient-to:rgb(68 64 60 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-stone-800{--tw-gradient-from:#292524 var(--tw-gradient-from-position);--tw-gradient-to:rgb(41 37 36 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.via-blue-500{--tw-gradient-to:rgb(59 130 246 / 0)  var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), #3b82f6 var(--tw-gradient-via-position), var(--tw-gradient-to)}.via-fuchsia-600{--tw-gradient-to:rgb(192 38 211 / 0)  var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), #c026d3 var(--tw-gradient-via-position), var(--tw-gradient-to)}.via-indigo-600{--tw-gradient-to:rgb(79 70 229 / 0)  var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), #4f46e5 var(--tw-gradient-via-position), var(--tw-gradient-to)}.via-sky-400{--tw-gradient-to:rgb(56 189 248 / 0)  var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), #38bdf8 var(--tw-gradient-via-position), var(--tw-gradient-to)}.via-sky-500{--tw-gradient-to:rgb(14 165 233 / 0)  var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), #0ea5e9 var(--tw-gradient-via-position), var(--tw-gradient-to)}.via-slate-900{--tw-gradient-to:rgb(15 23 42 / 0)  var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), #0f172a var(--tw-gradient-via-position), var(--tw-gradient-to)}.via-stone-700{--tw-gradient-to:rgb(68 64 60 / 0)  var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), #44403c var(--tw-gradient-via-position), var(--tw-gradient-to)}.via-teal-600{--tw-gradient-to:rgb(13 148 136 / 0)  var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), #0d9488 var(--tw-gradient-via-position), var(--tw-gradient-to)}.to-amber-500{--tw-gradient-to:#f59e0b var(--tw-gradient-to-position)}.to-blue-700{--tw-gradient-to:#1d4ed8 var(--tw-gradient-to-position)}.to-blue-950{--tw-gradient-to:#172554 var(--tw-gradient-to-position)}.to-cyan-600{--tw-gradient-to:#0891b2 var(--tw-gradient-to-position)}.to-emerald-400{--tw-gradient-to:#34d399 var(--tw-gradient-to-position)}.to-indigo-500{--tw-gradient-to:#6366f1 var(--tw-gradient-to-position)}.to-indigo-700{--tw-gradient-to:#4338ca var(--tw-gradient-to-position)}.to-pink-500{--tw-gradient-to:#ec4899 var(--tw-gradient-to-position)}.to-sky-400{--tw-gradient-to:#38bdf8 var(--tw-gradient-to-position)}.to-sky-500{--tw-gradient-to:#0ea5e9 var(--tw-gradient-to-position)}.to-slate-900{--tw-gradient-to:#0f172a var(--tw-gradient-to-position)}.bg-clip-text{-webkit-background-clip:text;background-clip:text}.object-cover{object-fit:cover}.object-center{object-position:center}.object-top{object-position:top}.p-1{padding:0.25rem}.p-1\.5{padding:0.375rem}.p-2\.5{padding:0.625rem}.p-3{padding:0.75rem}.p-3\.5{padding:0.875rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.px-1{padding-left:0.25rem;padding-right:0.25rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-2\.5{padding-left:0.625rem;padding-right:0.625rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-3\.5{padding-left:0.875rem;padding-right:0.875rem}.px-4{padding-left:1rem;padding-right:1rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-0\.5{padding-top:0.125rem;padding-bottom:0.125rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-1\.5{padding-top:0.375rem;padding-bottom:0.375rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-3\.5{padding-top:0.875rem;padding-bottom:0.875rem}.py-8{padding-top:2rem;padding-bottom:2rem}.pb-2{padding-bottom:0.5rem}.pb-20{padding-bottom:5rem}.pb-3{padding-bottom:0.75rem}.pb-6{padding-bottom:1.5rem}.pb-8{padding-bottom:2rem}.pr-2{padding-right:0.5rem}.pt-1{padding-top:0.25rem}.pt-2{padding-top:0.5rem}.pt-28{padding-top:7rem}.pt-3{padding-top:0.75rem}.pt-4{padding-top:1rem}.pt-8{padding-top:2rem}.text-center{text-align:center}.font-display{font-family:Plus Jakarta Sans, sans-serif}.font-mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}.font-sans{font-family:Inter, sans-serif}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-8xl{font-size:6rem;line-height:1}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-\[9px\]{font-size:9px}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-black{font-weight:900}.font-bold{font-weight:700}.font-extrabold{font-weight:800}.font-medium{font-weight:500}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.leading-\[1\.12\]{line-height:1.12}.leading-none{line-height:1}.leading-relaxed{line-height:1.625}.tracking-\[0\.25em\]{letter-spacing:0.25em}.tracking-tight{letter-spacing:-0.025em}.tracking-wide{letter-spacing:0.025em}.tracking-wider{letter-spacing:0.05em}.tracking-widest{letter-spacing:0.1em}.text-amber-200{--tw-text-opacity:1;color:rgb(253 230 138 / var(--tw-text-opacity, 1))}.text-amber-200\/90{color:rgb(253 230 138 / 0.9)}.text-amber-300{--tw-text-opacity:1;color:rgb(252 211 77 / var(--tw-text-opacity, 1))}.text-amber-400{--tw-text-opacity:1;color:rgb(251 191 36 / var(--tw-text-opacity, 1))}.text-amber-500{--tw-text-opacity:1;color:rgb(245 158 11 / var(--tw-text-opacity, 1))}.text-blue-400{--tw-text-opacity:1;color:rgb(96 165 250 / var(--tw-text-opacity, 1))}.text-blue-500{--tw-text-opacity:1;color:rgb(59 130 246 / var(--tw-text-opacity, 1))}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.text-emerald-100{--tw-text-opacity:1;color:rgb(209 250 229 / var(--tw-text-opacity, 1))}.text-emerald-300{--tw-text-opacity:1;color:rgb(110 231 183 / var(--tw-text-opacity, 1))}.text-emerald-400{--tw-text-opacity:1;color:rgb(52 211 153 / var(--tw-text-opacity, 1))}.text-emerald-500{--tw-text-opacity:1;color:rgb(16 185 129 / var(--tw-text-opacity, 1))}.text-emerald-600{--tw-text-opacity:1;color:rgb(5 150 105 / var(--tw-text-opacity, 1))}.text-emerald-700{--tw-text-opacity:1;color:rgb(4 120 87 / var(--tw-text-opacity, 1))}.text-indigo-500{--tw-text-opacity:1;color:rgb(99 102 241 / var(--tw-text-opacity, 1))}.text-pink-100{--tw-text-opacity:1;color:rgb(252 231 243 / var(--tw-text-opacity, 1))}.text-pink-500{--tw-text-opacity:1;color:rgb(236 72 153 / var(--tw-text-opacity, 1))}.text-purple-500{--tw-text-opacity:1;color:rgb(168 85 247 / var(--tw-text-opacity, 1))}.text-purple-600{--tw-text-opacity:1;color:rgb(147 51 234 / var(--tw-text-opacity, 1))}.text-red-400{--tw-text-opacity:1;color:rgb(248 113 113 / var(--tw-text-opacity, 1))}.text-red-500{--tw-text-opacity:1;color:rgb(239 68 68 / var(--tw-text-opacity, 1))}.text-rose-500{--tw-text-opacity:1;color:rgb(244 63 94 / var(--tw-text-opacity, 1))}.text-sky-100{--tw-text-opacity:1;color:rgb(224 242 254 / var(--tw-text-opacity, 1))}.text-sky-300{--tw-text-opacity:1;color:rgb(125 211 252 / var(--tw-text-opacity, 1))}.text-sky-400{--tw-text-opacity:1;color:rgb(56 189 248 / var(--tw-text-opacity, 1))}.text-slate-100{--tw-text-opacity:1;color:rgb(241 245 249 / var(--tw-text-opacity, 1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184 / var(--tw-text-opacity, 1))}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139 / var(--tw-text-opacity, 1))}.text-slate-600{--tw-text-opacity:1;color:rgb(71 85 105 / var(--tw-text-opacity, 1))}.text-slate-700{--tw-text-opacity:1;color:rgb(51 65 85 / var(--tw-text-opacity, 1))}.text-slate-800{--tw-text-opacity:1;color:rgb(30 41 59 / var(--tw-text-opacity, 1))}.text-slate-900{--tw-text-opacity:1;color:rgb(15 23 42 / var(--tw-text-opacity, 1))}.text-stone-200{--tw-text-opacity:1;color:rgb(231 229 228 / var(--tw-text-opacity, 1))}.text-transparent{color:transparent}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.opacity-20{opacity:0.2}.opacity-35{opacity:0.35}.opacity-70{opacity:0.7}.opacity-90{opacity:0.9}.shadow{--tw-shadow:0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-inner{--tw-shadow:inset 0 2px 4px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:inset 0 2px 4px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-blue-500\/25{--tw-shadow-color:rgb(59 130 246 / 0.25);--tw-shadow:var(--tw-shadow-colored)}.shadow-blue-500\/30{--tw-shadow-color:rgb(59 130 246 / 0.3);--tw-shadow:var(--tw-shadow-colored)}.shadow-blue-500\/5{--tw-shadow-color:rgb(59 130 246 / 0.05);--tw-shadow:var(--tw-shadow-colored)}.blur-3xl{--tw-blur:blur(64px);filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.drop-shadow{--tw-drop-shadow:drop-shadow(0 1px 2px rgb(0 0 0 / 0.1)) drop-shadow(0 1px 1px rgb(0 0 0 / 0.06));filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.drop-shadow-md{--tw-drop-shadow:drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.backdrop-blur{--tw-backdrop-blur:blur(8px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-md{--tw-backdrop-blur:blur(12px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-opacity{transition-property:opacity;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-transform{transition-property:transform;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-300{transition-duration:300ms}.duration-500{transition-duration:500ms}.selection\:bg-blue-500 *::selection{--tw-bg-opacity:1;background-color:rgb(59 130 246 / var(--tw-bg-opacity, 1))}.selection\:text-white *::selection{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.selection\:bg-blue-500::selection{--tw-bg-opacity:1;background-color:rgb(59 130 246 / var(--tw-bg-opacity, 1))}.selection\:text-white::selection{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.hover\:-translate-y-0\.5:hover{--tw-translate-y:-0.125rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.hover\:scale-105:hover{--tw-scale-x:1.05;--tw-scale-y:1.05;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.hover\:border-blue-500:hover{--tw-border-opacity:1;border-color:rgb(59 130 246 / var(--tw-border-opacity, 1))}.hover\:border-blue-500\/50:hover{border-color:rgb(59 130 246 / 0.5)}.hover\:bg-amber-500\/30:hover{background-color:rgb(245 158 11 / 0.3)}.hover\:bg-blue-500:hover{--tw-bg-opacity:1;background-color:rgb(59 130 246 / var(--tw-bg-opacity, 1))}.hover\:bg-blue-500\/10:hover{background-color:rgb(59 130 246 / 0.1)}.hover\:bg-blue-500\/20:hover{background-color:rgb(59 130 246 / 0.2)}.hover\:bg-emerald-500:hover{--tw-bg-opacity:1;background-color:rgb(16 185 129 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-900:hover{--tw-bg-opacity:1;background-color:rgb(15 23 42 / var(--tw-bg-opacity, 1))}.hover\:text-blue-600:hover{--tw-text-opacity:1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.hover\:text-slate-600:hover{--tw-text-opacity:1;color:rgb(71 85 105 / var(--tw-text-opacity, 1))}.hover\:underline:hover{-webkit-text-decoration-line:underline;text-decoration-line:underline}.hover\:opacity-90:hover{opacity:0.9}.hover\:opacity-95:hover{opacity:0.95}.hover\:shadow-blue-500\/50:hover{--tw-shadow-color:rgb(59 130 246 / 0.5);--tw-shadow:var(--tw-shadow-colored)}.focus\:border-blue-500:focus{--tw-border-opacity:1;border-color:rgb(59 130 246 / var(--tw-border-opacity, 1))}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.group:hover .group-hover\:scale-105{--tw-scale-x:1.05;--tw-scale-y:1.05;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:scale-110{--tw-scale-x:1.1;--tw-scale-y:1.1;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:underline{-webkit-text-decoration-line:underline;text-decoration-line:underline}.dark\:border-slate-700:is(.dark *){--tw-border-opacity:1;border-color:rgb(51 65 85 / var(--tw-border-opacity, 1))}.dark\:border-slate-800:is(.dark *){--tw-border-opacity:1;border-color:rgb(30 41 59 / var(--tw-border-opacity, 1))}.dark\:border-slate-800\/80:is(.dark *){border-color:rgb(30 41 59 / 0.8)}.dark\:bg-slate-700:is(.dark *){--tw-bg-opacity:1;background-color:rgb(51 65 85 / var(--tw-bg-opacity, 1))}.dark\:bg-slate-800:is(.dark *){--tw-bg-opacity:1;background-color:rgb(30 41 59 / var(--tw-bg-opacity, 1))}.dark\:bg-slate-800\/80:is(.dark *){background-color:rgb(30 41 59 / 0.8)}.dark\:bg-slate-900\/60:is(.dark *){background-color:rgb(15 23 42 / 0.6)}.dark\:bg-slate-950:is(.dark *){--tw-bg-opacity:1;background-color:rgb(2 6 23 / var(--tw-bg-opacity, 1))}.dark\:bg-white:is(.dark *){--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.dark\:text-emerald-300:is(.dark *){--tw-text-opacity:1;color:rgb(110 231 183 / var(--tw-text-opacity, 1))}.dark\:text-emerald-400:is(.dark *){--tw-text-opacity:1;color:rgb(52 211 153 / var(--tw-text-opacity, 1))}.dark\:text-purple-300:is(.dark *){--tw-text-opacity:1;color:rgb(216 180 254 / var(--tw-text-opacity, 1))}.dark\:text-purple-400:is(.dark *){--tw-text-opacity:1;color:rgb(192 132 252 / var(--tw-text-opacity, 1))}.dark\:text-sky-300:is(.dark *){--tw-text-opacity:1;color:rgb(125 211 252 / var(--tw-text-opacity, 1))}.dark\:text-sky-400:is(.dark *){--tw-text-opacity:1;color:rgb(56 189 248 / var(--tw-text-opacity, 1))}.dark\:text-slate-100:is(.dark *){--tw-text-opacity:1;color:rgb(241 245 249 / var(--tw-text-opacity, 1))}.dark\:text-slate-200:is(.dark *){--tw-text-opacity:1;color:rgb(226 232 240 / var(--tw-text-opacity, 1))}.dark\:text-slate-300:is(.dark *){--tw-text-opacity:1;color:rgb(203 213 225 / var(--tw-text-opacity, 1))}.dark\:text-slate-400:is(.dark *){--tw-text-opacity:1;color:rgb(148 163 184 / var(--tw-text-opacity, 1))}.dark\:text-slate-900:is(.dark *){--tw-text-opacity:1;color:rgb(15 23 42 / var(--tw-text-opacity, 1))}.dark\:hover\:text-sky-400:hover:is(.dark *){--tw-text-opacity:1;color:rgb(56 189 248 / var(--tw-text-opacity, 1))}.dark\:hover\:text-slate-200:hover:is(.dark *){--tw-text-opacity:1;color:rgb(226 232 240 / var(--tw-text-opacity, 1))}@media (min-width: 640px){.sm\:block{display:block}.sm\:inline{display:inline}.sm\:flex{display:flex}.sm\:w-44{width:11rem}.sm\:w-64{width:16rem}.sm\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.sm\:flex-row{flex-direction:row}.sm\:items-end{align-items:flex-end}.sm\:items-center{align-items:center}.sm\:gap-2\.5{gap:0.625rem}.sm\:space-y-32 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(8rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(8rem * var(--tw-space-y-reverse))}.sm\:p-10{padding:2.5rem}.sm\:p-6{padding:1.5rem}.sm\:p-7{padding:1.75rem}.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:pt-32{padding-top:8rem}.sm\:text-2xl{font-size:1.5rem;line-height:2rem}.sm\:text-4xl{font-size:2.25rem;line-height:2.5rem}.sm\:text-5xl{font-size:3rem;line-height:1}.sm\:text-base{font-size:1rem;line-height:1.5rem}.sm\:text-lg{font-size:1.125rem;line-height:1.75rem}.sm\:text-sm{font-size:0.875rem;line-height:1.25rem}.sm\:text-xl{font-size:1.25rem;line-height:1.75rem}}@media (min-width: 768px){.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.md\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.md\:flex-row{flex-direction:row}.md\:items-end{align-items:flex-end}.md\:text-base{font-size:1rem;line-height:1.5rem}}@media (min-width: 1024px){.lg\:col-span-4{grid-column:span 4 / span 4}.lg\:col-span-5{grid-column:span 5 / span 5}.lg\:col-span-7{grid-column:span 7 / span 7}.lg\:col-span-8{grid-column:span 8 / span 8}.lg\:mx-0{margin-left:0px;margin-right:0px}.lg\:flex{display:flex}.lg\:grid-cols-12{grid-template-columns:repeat(12, minmax(0, 1fr))}.lg\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.lg\:grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}.lg\:flex-row{flex-direction:row}.lg\:items-center{align-items:center}.lg\:justify-start{justify-content:flex-start}.lg\:gap-8{gap:2rem}.lg\:p-12{padding:3rem}.lg\:px-10{padding-left:2.5rem;padding-right:2.5rem}.lg\:text-left{text-align:left}}@media (min-width: 1280px){.xl\:text-6xl{font-size:3.75rem;line-height:1}}</style></head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300 min-h-screen overflow-x-hidden selection:bg-blue-500 selection:text-white">
+
+    <!-- 3D Interactive Background Canvas (Three.js) -->
+    <canvas id="bg-canvas" aria-hidden="true" width="757" height="661" style="width: 947px; height: 827px;"></canvas>
+
+    <!-- Visual Alert Toast (Deaf-Friendly Visual Notification System) -->
+    <div id="visual-toast" role="status" aria-live="polite" class="fixed top-20 right-4 z-50 transform translate-x-[120%] transition-transform duration-300 glass-panel px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border-l-4 border-l-blue-500 max-w-sm">
+        <div class="w-9 h-9 rounded-xl bg-blue-500/20 text-blue-500 flex items-center justify-center shrink-0">
+            <i id="toast-icon" class="fa-solid fa-bolt-lightning animate-bounce"></i>
+        </div>
+        <div>
+            <p id="toast-title" class="text-xs font-bold uppercase tracking-wider text-blue-500">Visual Alert</p>
+            <p id="toast-msg" class="text-sm font-medium">Mode berhasil diperbarui!</p>
+        </div>
+    </div>
+
+    <!-- Header / Sticky Glassmorphism Navbar -->
+    <header class="fixed top-0 left-0 right-0 z-40 px-4 sm:px-6 lg:px-10 py-3">
+        <nav class="max-w-7xl mx-auto glass-panel rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between shadow-lg shadow-blue-500/5">
+            <!-- Brand / Identity -->
+            <a href="#hero" class="flex items-center gap-3 group focus:outline-none">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-sky-500 to-indigo-500 flex items-center justify-center text-white font-display font-extrabold text-lg shadow-md shadow-blue-500/30 group-hover:scale-105 transition">
+                    AG
+                </div>
+                <div class="hidden sm:block">
+                    <span class="font-display font-bold text-sm md:text-base tracking-tight block leading-none">Aisyah Grisseeta</span>
+                    <span class="text-[11px] font-medium text-blue-600 dark:text-sky-400 flex items-center gap-1 mt-0.5">
+                        <i class="fa-brands fa-google text-[10px]"></i> GSAID26B21662
+                    </span>
+                </div>
+            </a>
+
+            <!-- Desktop Navigation Links -->
+            <div class="hidden lg:flex items-center gap-6 text-sm font-medium">
+                <a href="#hero" data-i18n="nav_home" class="hover:text-blue-600 dark:hover:text-sky-400 transition">Beranda</a>
+                <a href="#about" data-i18n="nav_about" class="hover:text-blue-600 dark:hover:text-sky-400 transition">Tentang &amp; GSA</a>
+                <a href="#gsa-moments" data-i18n="nav_gallery" class="hover:text-blue-600 dark:hover:text-sky-400 transition">Galeri GSA</a>
+                <a href="#umg-access" class="px-3 py-1.5 rounded-xl bg-blue-500/10 text-blue-600 dark:text-sky-300 border border-blue-500/20 hover:bg-blue-500/20 transition flex items-center gap-1.5 font-semibold">
+                    <i class="fa-solid fa-hands-asl-interpreting"></i>
+                    <span data-i18n="nav_umg">Inklusi UMG</span>
+                </a>
+                <a href="#projects" data-i18n="nav_projects" class="hover:text-blue-600 dark:hover:text-sky-400 transition">Proyek</a>
+                <a href="#contact" data-i18n="nav_contact" class="hover:text-blue-600 dark:hover:text-sky-400 transition">Kontak</a>
+            </div>
+
+            <!-- Action Controls: Bilingual Toggle, Theme Toggle, Accessibility Menu, Download -->
+            <div class="flex items-center gap-2 sm:gap-2.5">
+                <!-- Bilingual Toggle (ID / EN) -->
+                <button id="lang-toggle" type="button" aria-label="Toggle Language ID/EN" class="glass-panel px-3 py-2 rounded-xl text-xs font-bold tracking-wider hover:border-blue-500/50 transition flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-globe text-blue-500"></i>
+                    <span id="lang-label">ID</span>
+                </button>
+
+                <!-- Dark / Light Mode Toggle -->
+                <button id="theme-toggle" type="button" aria-label="Toggle Dark/Light Theme" class="glass-panel w-9 h-9 rounded-xl flex items-center justify-center hover:border-blue-500/50 transition shadow-sm text-amber-500 dark:text-sky-300">
+                    <i id="theme-icon" class="fa-solid fa-sun text-sm"></i>
+                </button>
+
+                <!-- Quick Accessibility Drawer Trigger -->
+                <button id="a11y-toggle" type="button" aria-label="Pengaturan Aksesibilitas" title="Aksesibilitas Disabilitas UMG" class="w-9 h-9 rounded-xl bg-gradient-to-r from-blue-600 to-sky-500 text-white flex items-center justify-center shadow-md shadow-blue-500/25 hover:scale-105 transition">
+                    <i class="fa-solid fa-universal-access text-base"></i>
+                </button>
+
+                <!-- Download Clean HTML for GitHub Pages -->
+                <button id="download-btn" type="button" class="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-semibold hover:opacity-90 transition shadow-sm">
+                    <i class="fa-brands fa-github"></i>
+                    <span data-i18n="btn_export">Unduh HTML</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Floating Accessibility Toolbar (Toggleable) -->
+        <div id="a11y-panel" class="hidden max-w-md ml-auto mt-2 glass-panel rounded-2xl p-4 shadow-2xl border border-blue-500/30">
+            <div class="flex items-center justify-between pb-2 mb-3 border-b border-slate-200 dark:border-slate-800">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-hands-asl-interpreting text-blue-500"></i>
+                    <span class="font-display font-bold text-sm" data-i18n="a11y_title">Aksesibilitas Kampus Inklusif UMG</span>
+                </div>
+                <button id="close-a11y" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xs p-1">
+                    <i class="fa-solid fa-xmark text-base"></i>
+                </button>
+            </div>
+            <div class="grid grid-cols-2 gap-2.5 text-xs">
+                <button id="btn-font-inc" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 hover:bg-blue-500/10 flex items-center gap-2 font-medium transition">
+                    <i class="fa-solid fa-magnifying-glass-plus text-blue-500"></i>
+                    <span data-i18n="a11y_zoom_in">Perbesar Teks</span>
+                </button>
+                <button id="btn-font-dec" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 hover:bg-blue-500/10 flex items-center gap-2 font-medium transition">
+                    <i class="fa-solid fa-magnifying-glass-minus text-blue-500"></i>
+                    <span data-i18n="a11y_zoom_out">Perkecil Teks</span>
+                </button>
+                <button id="btn-readable-font" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 hover:bg-blue-500/10 flex items-center gap-2 font-medium transition">
+                    <i class="fa-solid fa-font text-emerald-500"></i>
+                    <span data-i18n="a11y_font">Font Hyperlegible</span>
+                </button>
+                <button id="btn-contrast" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 hover:bg-blue-500/10 flex items-center gap-2 font-medium transition">
+                    <i class="fa-solid fa-circle-half-stroke text-amber-500"></i>
+                    <span data-i18n="a11y_contrast">Kontras Tinggi</span>
+                </button>
+                <button id="btn-motion" class="col-span-2 p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 hover:bg-blue-500/10 flex items-center justify-center gap-2 font-medium transition">
+                    <i class="fa-solid fa-cube text-purple-500"></i>
+                    <span id="motion-label" data-i18n="a11y_pause_3d">Jeda Animasi 3D (Fokus)</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="relative z-10 pt-28 sm:pt-32 pb-20 px-4 sm:px-6 lg:px-10 max-w-7xl mx-auto space-y-24 sm:space-y-32">
+
+        <!-- ================= HERO SECTION ================= -->
+        <section id="hero" class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center min-h-[78vh]">
+            
+            <!-- Left Column: Bio, Badges & CTA -->
+            <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                <!-- Badges Row -->
+                <div class="flex flex-wrap items-center justify-center lg:justify-start gap-2.5">
+                    <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-blue-500/15 text-blue-600 dark:text-sky-300 border border-blue-500/30 shadow-sm">
+                        <span class="w-2 h-2 rounded-full bg-blue-500 animate-ping"></span>
+                        <i class="fa-brands fa-google"></i>
+                        <span>Google Student Ambassador • #TeamGoogle</span>
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
+                        <i class="fa-solid fa-ear-deaf"></i>
+                        <span data-i18n="hero_deaf_badge">Deaf Tech Creator • Bisindo</span>
+                    </span>
+                </div>
+
+                <!-- Main Heading -->
+                <div class="space-y-2">
+                    <p class="text-xs sm:text-sm font-bold uppercase tracking-widest text-blue-600 dark:text-sky-400" data-i18n="hero_greeting">Halo, Selamat Datang di Ruang Kerja 3D Saya 👋</p>
+                    <h1 class="font-display font-extrabold text-3xl sm:text-5xl xl:text-6xl tracking-tight leading-[1.12]">
+                        Aisyah Grisseeta <br class="hidden sm:inline">
+                        <span class="bg-gradient-to-r from-blue-600 via-sky-400 to-indigo-500 bg-clip-text text-transparent">Az-Zahra</span>
+                    </h1>
+                </div>
+
+                <!-- Dynamic Roles Pill List -->
+                <div class="flex flex-wrap items-center justify-center lg:justify-start gap-2 text-xs sm:text-sm font-semibold">
+                    <span class="px-3.5 py-1.5 rounded-xl glass-panel flex items-center gap-2">
+                        <i class="fa-solid fa-code text-blue-500"></i> Frontend Developer
+                    </span>
+                    <span class="px-3.5 py-1.5 rounded-xl glass-panel flex items-center gap-2">
+                        <i class="fa-solid fa-pen-ruler text-pink-500"></i> UI/UX Designer
+                    </span>
+                    <span class="px-3.5 py-1.5 rounded-xl glass-panel flex items-center gap-2">
+                        <i class="fa-solid fa-graduation-cap text-amber-500"></i>
+                        <span data-i18n="hero_role_student">S1 Teknik Informatika UMG</span>
+                    </span>
+                </div>
+
+                <!-- Bio Paragraph -->
+                <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed" data-i18n="hero_bio">Mahasiswa Tuli Universitas Muhammadiyah Gresik (UMG) yang bersemangat membangun solusi web interaktif, teknologi aksesibel bagi penyandang disabilitas, dan desain antarmuka yang ramah pengguna (user-friendly).</p>
+
+                <!-- Primary CTAs -->
+                <div class="flex flex-wrap items-center justify-center lg:justify-start gap-3.5 pt-2">
+                    <a href="#umg-access" class="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 via-blue-500 to-sky-500 text-white font-display font-bold text-sm shadow-xl shadow-blue-500/30 hover:shadow-blue-500/50 hover:-translate-y-0.5 transition flex items-center gap-2.5">
+                        <i class="fa-solid fa-universal-access text-lg"></i>
+                        <span data-i18n="cta_access_app">Buka Aplikasi Disabilitas UMG</span>
+                    </a>
+                    <a href="#projects" class="px-6 py-3.5 rounded-2xl glass-panel font-display font-bold text-sm hover:border-blue-500/50 hover:-translate-y-0.5 transition flex items-center gap-2">
+                        <i class="fa-solid fa-cubes"></i>
+                        <span data-i18n="cta_projects">Lihat Karya UI/UX &amp; Web</span>
+                    </a>
+                </div>
+
+                <!-- Quick Stats Bar -->
+                <div class="grid grid-cols-3 gap-3 pt-4 max-w-lg mx-auto lg:mx-0">
+                    <div class="glass-panel p-3 rounded-2xl text-center lg:text-left">
+                        <div class="font-display font-extrabold text-xl sm:text-2xl text-blue-600 dark:text-sky-400">GSA '26</div>
+                        <div class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">#TeamGoogle ID</div>
+                    </div>
+                    <div class="glass-panel p-3 rounded-2xl text-center lg:text-left">
+                        <div class="font-display font-extrabold text-xl sm:text-2xl text-emerald-500">100%</div>
+                        <div class="text-[11px] text-slate-500 dark:text-slate-400 font-medium" data-i18n="stat_wcag">Desain Aksesibel</div>
+                    </div>
+                    <div class="glass-panel p-3 rounded-2xl text-center lg:text-left">
+                        <div class="font-display font-extrabold text-xl sm:text-2xl text-amber-500">UMG</div>
+                        <div class="text-[11px] text-slate-500 dark:text-slate-400 font-medium" data-i18n="stat_major">Teknik Informatika</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: 3D Tilt Dual-Photo Switcher Profile Card (Google Wall Photo + Official GSA Poster) -->
+            <div class="lg:col-span-5 flex flex-col items-center">
+                
+                <!-- Interactive Photo Mode Switcher Pills -->
+                <div class="mb-3 glass-panel p-1.5 rounded-2xl flex items-center gap-1.5 shadow-lg border border-blue-500/30 z-20">
+                    <button id="switch-photo-wall" type="button" onclick="switchProfilePhoto('wall')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-blue-600 text-white shadow flex items-center gap-1.5 transition">
+                        <i class="fa-brands fa-google"></i>
+                        <span data-i18n="tab_photo_wall">Foto Google Office Wall</span>
+                    </button>
+                    <button id="switch-photo-poster" type="button" onclick="switchProfilePhoto('poster')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold hover:bg-blue-500/10 text-slate-700 dark:text-slate-200 flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-id-badge"></i>
+                        <span data-i18n="tab_photo_poster">Poster Resmi #TeamGoogle</span>
+                    </button>
+                </div>
+
+                <div class="tilt-card w-full max-w-[400px] rounded-3xl p-1.5 bg-gradient-to-b from-blue-400 via-sky-500 to-blue-700 shadow-2xl shadow-blue-500/30 cursor-pointer" data-tilt="">
+                    <div class="tilt-glare"></div>
+
+                    <!-- Card Poster Container Matching Both Google Wall & GSA #TeamGoogle Aesthetic -->
+                    <div id="hero-card-bg" class="relative rounded-[22px] overflow-hidden bg-gradient-to-b from-stone-800 via-slate-900 to-blue-950 text-white p-5 flex flex-col items-center justify-between min-h-[520px] transition-all duration-500">
+                        
+                        <!-- Diagonal Background Ribbons -->
+                        <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-35">
+                            <div class="gsa-ribbon absolute top-24 -left-16 right-0 py-2 text-center font-display font-extrabold text-xs tracking-[0.25em] text-white uppercase">
+                                GOOGLE STUDENT AMBASSADOR • #TEAMGOOGLE
+                            </div>
+                            <div class="gsa-ribbon absolute bottom-28 -left-16 right-0 py-2 text-center font-display font-extrabold text-xs tracking-[0.25em] text-white uppercase">
+                                GOOGLE STUDENT AMBASSADOR • UMG INFORMATIKA
+                            </div>
+                        </div>
+
+                        <!-- Top Header Badge (#TeamGoogle) -->
+                        <div class="tilt-inner relative z-10 flex flex-col items-center text-center mt-1">
+                            <div class="px-3 py-1 rounded-full bg-white text-slate-800 text-[11px] font-bold shadow flex items-center gap-1.5 mb-2">
+                                <i class="fa-solid fa-graduation-cap text-blue-600"></i>
+                                <span>Google Student Ambassador 2026</span>
+                            </div>
+                            <div id="hero-card-badge-pill" class="bg-white text-slate-900 px-4 py-1.5 rounded-xl font-display font-black text-xl tracking-tight shadow-lg transform -rotate-1 flex items-center gap-1.5">
+                                <span class="text-blue-600">G</span><span class="text-red-500">o</span><span class="text-amber-500">o</span><span class="text-blue-600">g</span><span class="text-emerald-500">l</span><span class="text-red-500">e</span>
+                                <span class="ml-1 text-slate-800">Space • #TeamGoogle</span>
+                            </div>
+                        </div>
+
+                        <!-- Center Portrait / Dual-Photo Slot -->
+                        <div class="tilt-inner relative z-10 my-2.5 w-full flex flex-col items-center group">
+                            <div id="photo-dropzone" class="w-60 h-72 sm:w-64 sm:h-76 rounded-2xl overflow-hidden border-4 border-white/85 shadow-2xl bg-slate-900 flex items-center justify-center relative">
+                                
+                                <!-- PHOTO 1: Google Coral/Floral Wall Photo (Supports both original filename and AGA-GSAID26B21662.jpg) -->
+                                <img id="profile-img-wall" src="AGA-GSAID26B21662.jpg" data-alt-src="AGA-GSAID26B21662.jpg" alt="Aisyah Grisseeta Az-Zahra di depan Dinding Logo 3D Google dengan Jaket Varsity #TeamGoogle" class="w-full h-full object-cover object-center transition-opacity duration-300 hidden" onerror="handleImageFallback(this, 'wall-fallback')">
+
+                                <!-- PHOTO 2: Official GSA Poster (image_4aae03.png) -->
+                                <img id="profile-img-poster" src="poster-gsa.png" data-alt-src="poster-gsa.png" alt="Poster Resmi Google Student Ambassador Aisyah Grisseeta Az-Zahra GSAID26B21662" class="hidden w-full h-full object-cover object-top transition-opacity duration-300" onerror="handleImageFallback(this, 'poster-fallback')">
+
+                                <!-- Aesthetic Fallback 1: Google 3D Coral/Floral Wall + Varsity Jacket Representation -->
+                                <div id="wall-fallback" class="inset-0 w-full h-full flex flex-col items-center justify-between bg-gradient-to-b from-amber-900/80 via-stone-700 to-slate-900 p-4 text-center relative overflow-hidden">
+                                    <div class="w-full flex justify-between px-1 opacity-70">
+                                        <span class="w-3 h-6 bg-amber-700 rounded-b"></span>
+                                        <span class="w-3 h-6 bg-amber-600 rounded-b"></span>
+                                        <span class="w-3 h-6 bg-amber-700 rounded-b"></span>
+                                        <span class="w-3 h-6 bg-amber-600 rounded-b"></span>
+                                        <span class="w-3 h-6 bg-amber-700 rounded-b"></span>
+                                        <span class="w-3 h-6 bg-amber-600 rounded-b"></span>
+                                    </div>
+                                    <div class="my-1 px-3 py-1.5 rounded-2xl bg-stone-800/80 border border-stone-500/40 shadow-inner">
+                                        <div class="font-display font-black text-3xl tracking-wider drop-shadow-md">
+                                            <span class="text-blue-400">G</span><span class="text-red-400">o</span><span class="text-amber-300">o</span><span class="text-sky-400">g</span><span class="text-emerald-400">l</span><span class="text-red-400">e</span>
+                                        </div>
+                                        <p class="text-[9px] text-amber-200/90 tracking-widest uppercase">3D Floral Wall • Google Office</p>
+                                    </div>
+                                    <div class="flex flex-col items-center">
+                                        <div class="w-20 h-20 rounded-full bg-slate-950 border-2 border-white flex flex-col items-center justify-center shadow-xl relative">
+                                            <i class="fa-solid fa-user-graduate text-2xl text-sky-300"></i>
+                                            <span class="text-[9px] font-bold text-white mt-0.5">Varsity GSA</span>
+                                            <span class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-white text-blue-600 flex items-center justify-center text-xs font-black shadow">G</span>
+                                        </div>
+                                        <span class="mt-2 text-[10px] text-stone-200 font-medium px-2 py-0.5 rounded bg-black/40" data-i18n="wall_photo_hint">Foto Dinding 3D Google (Varsity Jacket)</span>
+                                    </div>
+                                </div>
+
+                                <!-- Aesthetic Fallback 2: Official Blue GSA Poster Representation -->
+                                <div id="poster-fallback" class="inset-0 w-full h-full flex flex-col items-center justify-end bg-gradient-to-b from-sky-300 via-blue-500 to-indigo-700 p-4 text-center relative">
+                                    <div class="w-24 h-24 rounded-full bg-slate-900/90 border-2 border-white flex items-center justify-center mb-2 shadow-lg relative">
+                                        <i class="fa-solid fa-user-astronaut text-4xl text-sky-300"></i>
+                                        <span class="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-white text-blue-600 flex items-center justify-center text-xs font-black shadow">G</span>
+                                    </div>
+                                    <div class="bg-slate-900/85 backdrop-blur px-3 py-1.5 rounded-xl border border-white/20 text-[11px] font-bold text-white shadow">
+                                        #TeamGoogle Poster
+                                    </div>
+                                    <p class="text-[10px] text-sky-100 mt-1 opacity-90">image_4aae03.png</p>
+                                </div>
+                            </div>
+
+                            <!-- Interactive Photo Picker Button -->
+                            <div class="mt-2.5 flex flex-wrap items-center justify-center gap-1.5">
+                                <label for="photo-upload" class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/80 hover:bg-slate-900 text-white text-[11px] font-semibold backdrop-blur-md border border-white/30 transition shadow">
+                                    <i class="fa-solid fa-camera-rotate text-sky-300"></i>
+                                    <span id="upload-btn-label" data-i18n="btn_change_photo">Muat Foto Lokal Anda</span>
+                                </label>
+                                <input id="photo-upload" type="file" accept="image/*" class="hidden">
+                            </div>
+                        </div>
+
+                        <!-- Bottom Name & GSA ID Footer -->
+                        <div class="tilt-inner relative z-10 text-center w-full bg-slate-950/60 backdrop-blur-md rounded-2xl py-2.5 px-3 border border-white/25">
+                            <h2 class="font-display font-extrabold text-sm sm:text-base tracking-wide uppercase text-white drop-shadow">
+                                AISYAH GRISSEETA AZ-ZAHRA
+                            </h2>
+                            <p id="card-caption-sub" class="font-mono font-bold text-xs text-sky-300 tracking-widest">
+                                GSAID26B21662 • #TeamGoogle
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= GOOGLE STUDENT AMBASSADOR DUAL PHOTO & MOMENTS GALLERY ================= -->
+        <section id="gsa-moments" class="space-y-8 scroll-mt-24">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div class="space-y-2">
+                    <span class="px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-blue-500/10 text-blue-600 dark:text-sky-400 border border-blue-500/20">
+                        <i class="fa-brands fa-google mr-1"></i> <span data-i18n="gallery_badge">Galeri Momen #TeamGoogle</span>
+                    </span>
+                    <h2 class="font-display font-extrabold text-2xl sm:text-4xl" data-i18n="gallery_title">Perjalanan Google Student Ambassador &amp; Inklusi Kampus</h2>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-md" data-i18n="gallery_subtitle">Klik salah satu kartu di bawah untuk menampilkan foto tersebut sebagai tampilan utama di Kartu 3D Hero atas.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-7">
+                <!-- Gallery Card 1: Google Wall Photo -->
+                <div class="tilt-card glass-panel rounded-3xl p-5 sm:p-6 flex flex-col sm:flex-row gap-5 items-center border-2 border-blue-500/30 shadow-xl cursor-pointer group" data-tilt="" onclick="switchProfilePhoto('wall'); document.getElementById('hero').scrollIntoView({behavior:'smooth'});">
+                    <div class="tilt-glare"></div>
+                    <div class="w-full sm:w-44 h-56 rounded-2xl overflow-hidden shrink-0 bg-gradient-to-b from-stone-700 to-slate-900 border-2 border-white/40 relative flex items-center justify-center">
+                        <img id="gallery-img-wall" src="AGA-GSAID26B21662.jpg" data-alt-src="AGA-GSAID26B21662.jpg" alt="Aisyah di depan logo dinding 3D Google" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 hidden" onerror="handleImageFallback(this, 'gallery-wall-fallback')">
+                        <div id="gallery-wall-fallback" class="inset-0 p-3 flex flex-col items-center justify-center text-center">
+                            <span class="font-display font-black text-2xl tracking-wider mb-1">
+                                <span class="text-blue-400">G</span><span class="text-red-400">o</span><span class="text-amber-300">o</span><span class="text-sky-400">g</span><span class="text-emerald-400">l</span><span class="text-red-400">e</span>
+                            </span>
+                            <span class="text-[10px] text-amber-200 font-semibold">3D Floral Wall Photo</span>
+                            <span class="mt-2 px-2 py-0.5 rounded bg-white/10 text-[9px] text-white font-mono">Varsity Jacket #TeamGoogle</span>
+                        </div>
+                    </div>
+                    <div class="tilt-inner space-y-3">
+                        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-500/15 text-blue-600 dark:text-sky-300">
+                            <i class="fa-solid fa-camera"></i> <span data-i18n="g1_tag">Momen Ikonik Google Space</span>
+                        </div>
+                        <h3 class="font-display font-bold text-lg sm:text-xl" data-i18n="g1_title">Aisyah di Dinding 3D Floral Google</h3>
+                        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed" data-i18n="g1_desc">Mengenakan jaket varsity resmi navy-putih berlogo Google, mewakili semangat mahasiswa Tuli S1 Teknik Informatika UMG di ekosistem teknologi global.</p>
+                        <div class="pt-1 flex items-center gap-3">
+                            <span class="text-xs font-bold text-blue-600 dark:text-sky-400 group-hover:underline flex items-center gap-1">
+                                <i class="fa-solid fa-sparkles"></i> <span data-i18n="btn_set_hero">Tampilkan di Kartu 3D Utama</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gallery Card 2: Official GSA Poster (image_4aae03.png) -->
+                <div class="tilt-card glass-panel rounded-3xl p-5 sm:p-6 flex flex-col sm:flex-row gap-5 items-center border-2 border-sky-500/30 shadow-xl cursor-pointer group" data-tilt="" onclick="switchProfilePhoto('poster'); document.getElementById('hero').scrollIntoView({behavior:'smooth'});">
+                    <div class="tilt-glare"></div>
+                    <div class="w-full sm:w-44 h-56 rounded-2xl overflow-hidden shrink-0 bg-gradient-to-b from-sky-300 via-blue-500 to-blue-700 border-2 border-white/40 relative flex items-center justify-center">
+                        <img id="gallery-img-poster" src="poster-gsa.png" data-alt-src="poster-gsa.png" alt="Poster Resmi Google Student Ambassador Aisyah Grisseeta Az-Zahra" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500 hidden" onerror="handleImageFallback(this, 'gallery-poster-fallback')">
+                        <div id="gallery-poster-fallback" class="inset-0 p-3 flex flex-col items-center justify-center text-center text-white">
+                            <span class="px-2 py-0.5 rounded bg-white text-slate-900 font-display font-black text-sm mb-1">#TeamGoogle</span>
+                            <span class="text-[10px] font-bold">Google Student Ambassador</span>
+                            <span class="mt-2 font-mono text-[10px] bg-blue-900/60 px-2 py-0.5 rounded">GSAID26B21662</span>
+                        </div>
+                    </div>
+                    <div class="tilt-inner space-y-3">
+                        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-300">
+                            <i class="fa-solid fa-certificate"></i> <span data-i18n="g2_tag">Identitas Resmi GSA 2026</span>
+                        </div>
+                        <h3 class="font-display font-bold text-lg sm:text-xl" data-i18n="g2_title">Poster Resmi #TeamGoogle (GSAID26B21662)</h3>
+                        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed" data-i18n="g2_desc">Identitas resmi Google Student Ambassador Batch 2 tahun 2026 untuk Aisyah Grisseeta Az-Zahra, membawa misi edukasi Cloud, AI, dan aksesibilitas di UMG.</p>
+                        <div class="pt-1 flex items-center gap-3">
+                            <span class="text-xs font-bold text-blue-600 dark:text-sky-400 group-hover:underline flex items-center gap-1">
+                                <i class="fa-solid fa-sparkles"></i> <span data-i18n="btn_set_hero">Tampilkan di Kartu 3D Utama</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= ABOUT & GSA HIGHLIGHT SECTION ================= -->
+        <section id="about" class="space-y-10">
+            <div class="text-center max-w-3xl mx-auto space-y-3">
+                <span class="px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-blue-500/10 text-blue-600 dark:text-sky-400 border border-blue-500/20" data-i18n="about_badge">Profil &amp; Dedikasi Inklusivitas</span>
+                <h2 class="font-display font-extrabold text-2xl sm:text-4xl" data-i18n="about_title">Menjembatani Teknologi, Desain, &amp; Aksesibilitas Tuli</h2>
+                <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400" data-i18n="about_subtitle">Sebagai Mahasiswa Tuli di S1 Teknik Informatika Universitas Muhammadiyah Gresik (UMG) dan Google Student Ambassador, saya percaya bahwa teknologi terbaik adalah teknologi yang dapat diakses oleh semua orang tanpa batas.</p>
+            </div>
+
+            <!-- 3 Pillars 3D Tilt Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Card 1: Frontend Dev -->
+                <div class="tilt-card glass-panel rounded-3xl p-6 sm:p-7 space-y-4 border-t-4 border-t-blue-500 shadow-lg" data-tilt="">
+                    <div class="tilt-glare"></div>
+                    <div class="tilt-inner space-y-4">
+                        <div class="w-12 h-12 rounded-2xl bg-blue-500/15 text-blue-600 dark:text-sky-400 flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-laptop-code"></i>
+                        </div>
+                        <h3 class="font-display font-bold text-xl">Frontend Architecture</h3>
+                        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed" data-i18n="pillar_1_desc">Membangun antarmuka web modern yang responsif, cepat, dan interaktif menggunakan HTML5 Semantik (WCAG 2.1 AA), Tailwind CSS, JavaScript, React, dan WebGL/Three.js.</p>
+                        <div class="flex flex-wrap gap-1.5 pt-2">
+                            <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-200/70 dark:bg-slate-800">Tailwind CSS</span>
+                            <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-200/70 dark:bg-slate-800">JavaScript ES6+</span>
+                            <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-200/70 dark:bg-slate-800">Three.js</span>
+                            <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-200/70 dark:bg-slate-800">WAI-ARIA</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: UI/UX & Deaf-Centric Design -->
+                <div class="tilt-card glass-panel rounded-3xl p-6 sm:p-7 space-y-4 border-t-4 border-t-pink-500 shadow-lg" data-tilt="">
+                    <div class="tilt-glare"></div>
+                    <div class="tilt-inner space-y-4">
+                        <div class="w-12 h-12 rounded-2xl bg-pink-500/15 text-pink-500 flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-bezier-curve"></i>
+                        </div>
+                        <h3 class="font-display font-bold text-xl" data-i18n="pillar_2_title">Desain UI/UX Inklusif</h3>
+                        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed" data-i18n="pillar_2_desc">Merancang pengalaman pengguna berbasis visual-first, sistem umpan balik non-audio, tipografi jelas, serta alur pengguna yang ramah bagi teman Tuli maupun disabilitas lainnya.</p>
+                        <div class="flex flex-wrap gap-1.5 pt-2">
+                            <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-200/70 dark:bg-slate-800">Figma</span>
+                            <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-200/70 dark:bg-slate-800">Deaf Space UX</span>
+                            <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-200/70 dark:bg-slate-800">Prototyping</span>
+                            <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-200/70 dark:bg-slate-800">Design System</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Google Student Ambassador & UMG Leadership -->
+                <div class="tilt-card glass-panel rounded-3xl p-6 sm:p-7 space-y-4 border-t-4 border-t-amber-500 shadow-lg" data-tilt="">
+                    <div class="tilt-glare"></div>
+                    <div class="tilt-inner space-y-4">
+                        <div class="w-12 h-12 rounded-2xl bg-amber-500/15 text-amber-500 flex items-center justify-center text-xl">
+                            <i class="fa-brands fa-google"></i>
+                        </div>
+                        <h3 class="font-display font-bold text-xl">Google Student Ambassador</h3>
+                        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed" data-i18n="pillar_3_desc">Terpilih dalam #TeamGoogle (ID: GSAID26B21662) untuk menginspirasi komunitas kampus UMG melalui pemanfaatan teknologi Google, AI untuk aksesibilitas, dan kolaborasi inklusif.</p>
+                        <div class="flex flex-wrap gap-1.5 pt-2">
+                            <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-blue-500/15 text-blue-600 dark:text-sky-300">#TeamGoogle</span>
+                            <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-200/70 dark:bg-slate-800">Live Transcribe</span>
+                            <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-200/70 dark:bg-slate-800">Komunitas UMG</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= INTERACTIVE UMG DISABILITY STUDENT APP ("UMG ACCESSHUB") ================= -->
+        <section id="umg-access" class="scroll-mt-24">
+            <div class="glass-panel rounded-3xl p-6 sm:p-10 border-2 border-blue-500/30 shadow-2xl relative overflow-hidden">
+                <!-- Decorative Glow -->
+                <div class="absolute -top-24 -right-24 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+                <!-- Section Header -->
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-8 border-b border-slate-200/80 dark:border-slate-800">
+                    <div class="space-y-2 max-w-2xl">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 text-xs font-bold">
+                            <i class="fa-solid fa-universal-access"></i>
+                            <span data-i18n="umg_app_badge">Simulasi Aplikasi Aksesibilitas Kampus UMG</span>
+                        </div>
+                        <h2 class="font-display font-extrabold text-2xl sm:text-4xl flex items-center gap-3">
+                            <span>UMG AccessHub</span>
+                            <span class="text-xs sm:text-sm font-mono px-2.5 py-1 rounded-lg bg-blue-600 text-white">v2.6 Beta</span>
+                        </h2>
+                        <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300" data-i18n="umg_app_desc">Prototipe aplikasi web interaktif karya Aisyah untuk mendukung mahasiswa Tuli dan disabilitas di Universitas Muhammadiyah Gresik (UMG) dalam perkuliahan, komunikasi Bisindo, serta pengumuman visual kampus.</p>
+                    </div>
+
+                    <!-- Interactive Module Tabs -->
+                    <div class="flex flex-wrap gap-2" role="tablist">
+                        <button type="button" data-tab="tab-caption" class="umg-tab-btn active-tab px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-blue-600 text-white shadow-md shadow-blue-500/30 flex items-center gap-2 transition">
+                            <i class="fa-solid fa-closed-captioning"></i>
+                            <span data-i18n="tab_1_title">Transkripsi Kelas</span>
+                        </button>
+                        <button type="button" data-tab="tab-bisindo" class="umg-tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-200/70 dark:bg-slate-800 hover:bg-blue-500/20 flex items-center gap-2 transition">
+                            <i class="fa-solid fa-hands-asl-interpreting"></i>
+                            <span data-i18n="tab_2_title">Kamus Bisindo Kampus</span>
+                        </button>
+                        <button type="button" data-tab="tab-alert" class="umg-tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-200/70 dark:bg-slate-800 hover:bg-blue-500/20 flex items-center gap-2 transition">
+                            <i class="fa-solid fa-bell"></i>
+                            <span data-i18n="tab_3_title">Bel Visual &amp; Layanan</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- MODULE 1: Live Classroom Transcription Simulator -->
+                <div id="tab-caption" class="umg-tab-content pt-8 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+                    <div class="lg:col-span-8 bg-slate-900 text-slate-100 rounded-2xl p-5 sm:p-6 flex flex-col justify-between border border-slate-700 shadow-inner min-h-[290px]">
+                        <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-800">
+                            <div class="flex items-center gap-2">
+                                <span id="live-dot" class="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></span>
+                                <span class="font-mono text-xs font-bold text-emerald-400">LIVE CAPTION • GEDUNG TEKNIK INFORMATIKA UMG (R.402)</span>
+                            </div>
+                            <span class="text-xs text-slate-400 font-mono" id="caption-lang-indicator">Bahasa: ID / EN</span>
+                        </div>
+
+                        <!-- Live Transcript Stream Box -->
+                        <div id="transcript-box" class="my-4 space-y-3 overflow-y-auto max-h-48 pr-2 font-sans">
+                            <div class="p-3 rounded-xl bg-slate-800/90 border-l-4 border-blue-400">
+                                <span class="text-[11px] font-bold text-sky-400 block">Dosen Pengampu (Algoritma &amp; Struktur Data):</span>
+                                <p class="text-sm sm:text-base font-medium mt-0.5" id="caption-line-1">
+                                    "Selamat pagi rekan-rekan mahasiswa Informatika UMG. Hari ini kita akan membahas implementasi Graph pada aplikasi pencarian rute aksesibel."
+                                </p>
+                            </div>
+                            <div class="p-3 rounded-xl bg-blue-950/60 border-l-4 border-emerald-400">
+                                <span class="text-[11px] font-bold text-emerald-300 block">Sistem AI Visual UMG AccessHub:</span>
+                                <p class="text-sm sm:text-base font-medium mt-0.5" id="caption-line-2">
+                                    [Kata Kunci Penting]: Graph, Node, Edge, Dijkstra, Aksesibilitas Kampus. Slide presentasi halaman 14 telah dibagikan ke layar Anda.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Controls -->
+                        <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-800">
+                            <div class="flex items-center gap-2">
+                                <button id="btn-sim-caption" type="button" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center gap-2 transition">
+                                    <i class="fa-solid fa-play"></i>
+                                    <span data-i18n="btn_sim_lecture">Simulasikan Suara Dosen Berikutnya</span>
+                                </button>
+                                <button id="btn-raise-hand" type="button" class="px-3.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 text-xs font-bold flex items-center gap-1.5 transition">
+                                    <i class="fa-solid fa-hand"></i>
+                                    <span data-i18n="btn_ask_visual">Tanya via Teks ke Layar Dosen</span>
+                                </button>
+                            </div>
+                            <span class="text-[11px] text-slate-400">Latency: ~45ms • Web Speech API Ready</span>
+                        </div>
+                    </div>
+
+                    <!-- Side Info Card -->
+                    <div class="lg:col-span-4 rounded-2xl bg-blue-500/10 border border-blue-500/20 p-5 flex flex-col justify-between space-y-4">
+                        <div class="space-y-2">
+                            <span class="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-sky-400" data-i18n="why_important">Mengapa Fitur Ini Penting?</span>
+                            <h3 class="font-display font-bold text-lg" data-i18n="caption_card_title">Akses Setara di Ruang Kelas UMG</h3>
+                            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed" data-i18n="caption_card_desc">Mahasiswa Tuli sering mengalami kendala ketika penjelasan dosen berlangsung cepat atau tanpa teks visual. Modul ini mengubah ucapan dosen menjadi teks real-time beserta sorotan istilah koding/informatika secara otomatis.</p>
+                        </div>
+                        <div class="p-3.5 rounded-xl glass-panel space-y-2">
+                            <div class="flex items-center justify-between text-xs font-bold">
+                                <span data-i18n="accuracy_label">Akurasi Istilah Informatika</span>
+                                <span class="text-emerald-500">98.4%</span>
+                            </div>
+                            <div class="w-full h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+                                <div class="h-full w-[98%] bg-gradient-to-r from-blue-500 to-emerald-400"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MODULE 2: Interactive Bisindo Campus Dictionary -->
+                <div id="tab-bisindo" class="umg-tab-content hidden pt-8 space-y-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div>
+                            <h3 class="font-display font-bold text-xl" data-i18n="bisindo_heading">Kamus Visual Bisindo (Bahasa Isyarat Indonesia) Lingkungan Kampus UMG</h3>
+                            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400" data-i18n="bisindo_sub">Klik kartu kosakata di bawah untuk melihat panduan gerakan tangan visual agar mahasiswa &amp; dosen dapat berkomunikasi inklusif.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="bisindo-grid">
+                        <!-- Card A -->
+                        <div class="p-5 rounded-2xl glass-panel border hover:border-blue-500 transition cursor-pointer space-y-3" onclick="triggerBisindoPreview('Halo / Assalamualaikum', 'Angkat tangan kanan setinggi bahu dan gerakkan perlahan ke arah lawan bicara dengan senyum ramah.')">
+                            <div class="flex items-center justify-between">
+                                <span class="w-10 h-10 rounded-xl bg-blue-500/15 text-blue-500 flex items-center justify-center text-lg">
+                                    <i class="fa-solid fa-hand-peace"></i>
+                                </span>
+                                <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-500">Sapaan Dasar</span>
+                            </div>
+                            <h4 class="font-display font-bold text-base">Halo / Salam</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-300" data-i18n="sign_1_desc">Ayunkan telapak tangan terbuka di depan dada disertai kontak mata ramah.</p>
+                        </div>
+
+                        <!-- Card B -->
+                        <div class="p-5 rounded-2xl glass-panel border hover:border-blue-500 transition cursor-pointer space-y-3" onclick="triggerBisindoPreview('Terima Kasih', 'Sentuhkan ujung jari tangan kanan di dagu/bibir, lalu gerakkan maju ke arah lawan bicara.')">
+                            <div class="flex items-center justify-between">
+                                <span class="w-10 h-10 rounded-xl bg-emerald-500/15 text-emerald-500 flex items-center justify-center text-lg">
+                                    <i class="fa-solid fa-hand-holding-heart"></i>
+                                </span>
+                                <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500">Apresiasi</span>
+                            </div>
+                            <h4 class="font-display font-bold text-base">Terima Kasih</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-300" data-i18n="sign_2_desc">Ujung jari menyentuh dagu lalu membuka ke depan dengan ekspresi tulus.</p>
+                        </div>
+
+                        <!-- Card C -->
+                        <div class="p-5 rounded-2xl glass-panel border hover:border-blue-500 transition cursor-pointer space-y-3" onclick="triggerBisindoPreview('Kuliah / Belajar Informatika', 'Buka telapak tangan kiri seperti buku/laptop, tangan kanan melakukan gerakan mengetik dan menyerap ilmu ke dahi.')">
+                            <div class="flex items-center justify-between">
+                                <span class="w-10 h-10 rounded-xl bg-purple-500/15 text-purple-500 flex items-center justify-center text-lg">
+                                    <i class="fa-solid fa-laptop-file"></i>
+                                </span>
+                                <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-purple-500/10 text-purple-500">Akademik UMG</span>
+                            </div>
+                            <h4 class="font-display font-bold text-base">Kuliah / Koding</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-300" data-i18n="sign_3_desc">Gerakan jari mengetik di udara diikuti isyarat buku terbuka.</p>
+                        </div>
+
+                        <!-- Card D -->
+                        <div class="p-5 rounded-2xl glass-panel border hover:border-blue-500 transition cursor-pointer space-y-3" onclick="triggerBisindoPreview('Teman Inklusif / Kolaborasi', 'Kaitkan kedua jari telunjuk kanan dan kiri secara bergantian sebagai simbol persahabatan setara.')">
+                            <div class="flex items-center justify-between">
+                                <span class="w-10 h-10 rounded-xl bg-amber-500/15 text-amber-500 flex items-center justify-center text-lg">
+                                    <i class="fa-solid fa-hands-asl-interpreting"></i>
+                                </span>
+                                <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-500">Komunitas</span>
+                            </div>
+                            <h4 class="font-display font-bold text-base">Teman / Diskusi</h4>
+                            <p class="text-xs text-slate-600 dark:text-slate-300" data-i18n="sign_4_desc">Kaitkan kedua jari telunjuk melambangkan sinergi mahasiswa UMG.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MODULE 3: Visual Campus Bell & Disability Support Desk -->
+                <div id="tab-alert" class="umg-tab-content hidden pt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="p-6 rounded-2xl glass-panel space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-11 h-11 rounded-xl bg-rose-500/15 text-rose-500 flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-bell-concierge"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-display font-bold text-lg" data-i18n="visual_bell_title">Sistem Peringatan Visual Kampus (Deaf-Safe Alert)</h4>
+                                <p class="text-xs text-slate-500 dark:text-slate-400" data-i18n="visual_bell_sub">Mengubah pengumuman pengeras suara kampus menjadi notifikasi kilat layar.</p>
+                            </div>
+                        </div>
+                        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300" data-i18n="visual_bell_body">Uji coba bagaimana mahasiswa Tuli di UMG menerima informasi pergantian jam kuliah, panggilan antrean akademik, atau peringatan darurat melalui indikator cahaya visual.</p>
+                        <div class="flex flex-wrap gap-2.5 pt-2">
+                            <button type="button" onclick="showVisualAlert('Pergantian Sesi Kuliah', 'Kuliah Pemrograman Web dimulai 5 menit lagi di Lab Jaringan UMG.')" class="px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold hover:bg-blue-500 transition">
+                                <i class="fa-solid fa-chalkboard-user mr-1"></i> Uji Notifikasi Kelas
+                            </button>
+                            <button type="button" onclick="showVisualAlert('Panggilan Loket BAAK UMG', 'Nomor Antrean A-14 (Aisyah Grisseeta) silakan menuju Loket 2.')" class="px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-500 transition">
+                                <i class="fa-solid fa-ticket mr-1"></i> Uji Antrean Akademik
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="p-6 rounded-2xl glass-panel space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-11 h-11 rounded-xl bg-indigo-500/15 text-indigo-500 flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-people-group"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-display font-bold text-lg" data-i18n="volunteer_title">Jaringan Relawan Note-Taker &amp; Pendamping UMG</h4>
+                                <p class="text-xs text-slate-500 dark:text-slate-400" data-i18n="volunteer_sub">Kolaborasi mahasiswa Teknik Informatika UMG</p>
+                            </div>
+                        </div>
+                        <ul class="space-y-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-emerald-500"></i> <span>Berbagi catatan kuliah terstruktur &amp; rekaman layar praktikum.</span></li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-emerald-500"></i> <span>Integrasi Google Live Transcribe &amp; Google Workspace for Education.</span></li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-emerald-500"></i> <span>Pelatihan rutin dasar Bisindo bersama Google Student Ambassador.</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= FEATURED PROJECTS SECTION (3D TILT CARDS) ================= -->
+        <section id="projects" class="space-y-10 scroll-mt-24">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                <div class="space-y-2">
+                    <span class="px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-blue-500/10 text-blue-600 dark:text-sky-400 border border-blue-500/20" data-i18n="proj_badge">Portofolio Pilihan</span>
+                    <h2 class="font-display font-extrabold text-2xl sm:text-4xl" data-i18n="proj_heading">Karya Frontend &amp; Desain UI/UX Interaktif</h2>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-md" data-i18n="proj_hint">Arahkan kursor atau sentuh kartu proyek di bawah untuk merasakan efek perspektif 3D Tilt.</p>
+            </div>
+
+            <!-- Projects Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+                
+                <!-- Project 1 -->
+                <article class="tilt-card glass-panel rounded-3xl overflow-hidden flex flex-col justify-between shadow-xl group" data-tilt="">
+                    <div class="tilt-glare"></div>
+                    <div>
+                        <div class="h-48 bg-gradient-to-br from-blue-600 via-indigo-600 to-sky-400 p-6 flex flex-col justify-between relative overflow-hidden text-white">
+                            <i class="fa-solid fa-hands-asl-interpreting text-8xl absolute -right-4 -bottom-4 opacity-20 group-hover:scale-110 transition"></i>
+                            <div class="flex justify-between items-center relative z-10">
+                                <span class="px-3 py-1 rounded-full text-[11px] font-bold bg-white/20 backdrop-blur-md">Flagship App</span>
+                                <span class="text-xs font-mono bg-slate-900/40 px-2.5 py-1 rounded-lg">WCAG AAA</span>
+                            </div>
+                            <div class="relative z-10">
+                                <h3 class="font-display font-extrabold text-xl">UMG AccessHub Portal</h3>
+                                <p class="text-xs text-sky-100">Web App • Live Caption &amp; Bisindo</p>
+                            </div>
+                        </div>
+
+                        <div class="p-6 space-y-4 tilt-inner">
+                            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed" data-i18n="p1_desc">Platform terpadu untuk mahasiswa penyandang disabilitas di Universitas Muhammadiyah Gresik. Dilengkapi transkripsi kuliah langsung, kamus Bisindo, dan pengingat akademik visual.</p>
+                            <div class="flex flex-wrap gap-1.5">
+                                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-blue-500/10 text-blue-600 dark:text-sky-300">Tailwind CSS</span>
+                                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-blue-500/10 text-blue-600 dark:text-sky-300">Web Speech API</span>
+                                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-blue-500/10 text-blue-600 dark:text-sky-300">Inclusive UX</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6 pt-2 flex items-center justify-between">
+                        <a href="#umg-access" class="text-xs font-bold text-blue-600 dark:text-sky-400 hover:underline flex items-center gap-1.5">
+                            <span data-i18n="btn_try_demo">Coba Demo di Atas</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                        <span class="text-xs text-slate-400"><i class="fa-solid fa-star text-amber-400"></i> Featured</span>
+                    </div>
+                </article>
+
+                <!-- Project 2 -->
+                <article class="tilt-card glass-panel rounded-3xl overflow-hidden flex flex-col justify-between shadow-xl group" data-tilt="">
+                    <div class="tilt-glare"></div>
+                    <div>
+                        <div class="h-48 bg-gradient-to-br from-emerald-500 via-teal-600 to-cyan-600 p-6 flex flex-col justify-between relative overflow-hidden text-white">
+                            <i class="fa-brands fa-google text-8xl absolute -right-4 -bottom-4 opacity-20 group-hover:scale-110 transition"></i>
+                            <div class="flex justify-between items-center relative z-10">
+                                <span class="px-3 py-1 rounded-full text-[11px] font-bold bg-white/20 backdrop-blur-md">#TeamGoogle</span>
+                                <span class="text-xs font-mono bg-slate-900/40 px-2.5 py-1 rounded-lg">UI/UX &amp; Web</span>
+                            </div>
+                            <div class="relative z-10">
+                                <h3 class="font-display font-extrabold text-xl">GSA Tech Community Hub</h3>
+                                <p class="text-xs text-emerald-100">Event &amp; Study Jam Portal</p>
+                            </div>
+                        </div>
+
+                        <div class="p-6 space-y-4 tilt-inner">
+                            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed" data-i18n="p2_desc">Penyelenggaraan Masterclass NotebookLM ('Ubah Tumpukan PDF Jadi Podcast &amp; Ringkasan Instan') serta edukasi Google Cloud &amp; AI bagi mahasiswa Universitas Muhammadiyah Gresik.</p>
+                            <div class="flex flex-wrap gap-1.5">
+                                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-300">NotebookLM</span>
+                                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-300">Google Gemini AI</span>
+                                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-300">Speaker &amp; Host</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6 pt-2 flex items-center justify-between">
+                        <button type="button" onclick="showVisualAlert('Masterclass NotebookLM GSA', 'Workshop interaktif mengubah referensi jurnal kuliah menjadi ringkasan terstruktur dengan Google NotebookLM.')" class="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1.5">
+                            <span data-i18n="btn_view_case">Ringkasan Studi Kasus</span>
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                        <span class="text-xs text-slate-400">GSAID26B21662</span>
+                    </div>
+                </article>
+
+                <!-- Project 3 -->
+                <article class="tilt-card glass-panel rounded-3xl overflow-hidden flex flex-col justify-between shadow-xl group" data-tilt="">
+                    <div class="tilt-glare"></div>
+                    <div>
+                        <div class="h-48 bg-gradient-to-br from-purple-600 via-fuchsia-600 to-pink-500 p-6 flex flex-col justify-between relative overflow-hidden text-white">
+                            <i class="fa-solid fa-wand-magic-sparkles text-8xl absolute -right-4 -bottom-4 opacity-20 group-hover:scale-110 transition"></i>
+                            <div class="flex justify-between items-center relative z-10">
+                                <span class="px-3 py-1 rounded-full text-[11px] font-bold bg-white/20 backdrop-blur-md">Design System &amp; Art</span>
+                                <span class="text-xs font-mono bg-slate-900/40 px-2.5 py-1 rounded-lg">Figma + Bisindo</span>
+                            </div>
+                            <div class="relative z-10">
+                                <h3 class="font-display font-extrabold text-xl">DeafSpace UI &amp; Puisi Isyarat</h3>
+                                <p class="text-xs text-pink-100">Visual UI Kit &amp; Ekspresi Budaya Tuli</p>
+                            </div>
+                        </div>
+
+                        <div class="p-6 space-y-4 tilt-inner">
+                            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed" data-i18n="p3_desc">Pustaka komponen UI ramah Tuli berstandar kontras tinggi yang dipadukan dengan advokasi seni pertunjukan Puisi Bahasa Isyarat (Bisindo) di panggung kampus UMG.</p>
+                            <div class="flex flex-wrap gap-1.5">
+                                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-purple-500/10 text-purple-600 dark:text-purple-300">Design Tokens</span>
+                                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-purple-500/10 text-purple-600 dark:text-purple-300">Bisindo Poetry</span>
+                                <span class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-purple-500/10 text-purple-600 dark:text-purple-300">A11y</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6 pt-2 flex items-center justify-between">
+                        <button type="button" onclick="showVisualAlert('DeafSpace UI &amp; Seni Bisindo', 'Menggabungkan keahlian desain UI/UX modern dengan ekspresi seni Puisi Bahasa Isyarat Indonesia.')" class="text-xs font-bold text-purple-600 dark:text-purple-400 hover:underline flex items-center gap-1.5">
+                            <span data-i18n="btn_test_ui">Uji Mikro-Interaksi</span>
+                            <i class="fa-solid fa-bolt"></i>
+                        </button>
+                        <span class="text-xs text-slate-400">Open Source</span>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- ================= CONTACT & COLLABORATION SECTION ================= -->
+        <section id="contact" class="scroll-mt-24">
+            <div class="tilt-card glass-panel rounded-3xl p-6 sm:p-10 lg:p-12 shadow-2xl border border-blue-500/25" data-tilt="">
+                <div class="tilt-glare"></div>
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    <div class="lg:col-span-7 space-y-4">
+                        <span class="px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-blue-500/15 text-blue-600 dark:text-sky-300">
+                            <i class="fa-solid fa-paper-plane mr-1"></i> <span data-i18n="contact_badge">Mari Berkolaborasi</span>
+                        </span>
+                        <h2 class="font-display font-extrabold text-2xl sm:text-4xl" data-i18n="contact_heading">Siap Membangun Web yang Lebih Inklusif &amp; Interaktif?</h2>
+                        <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed" data-i18n="contact_desc">Sebagai mahasiswa Tuli di S1 Teknik Informatika UMG, saya sangat nyaman berkomunikasi melalui pesan tertulis (Email, LinkedIn, GitHub, atau WhatsApp Chat). Mari berdiskusi tentang proyek Frontend, UI/UX, atau kolaborasi Google Student Ambassador!</p>
+
+                        <!-- Social / Contact Pills -->
+                        <div class="flex flex-wrap gap-3 pt-2">
+                            <a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="px-4 py-2.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs sm:text-sm font-bold flex items-center gap-2 hover:scale-105 transition">
+                                <i class="fa-brands fa-github text-base"></i> GitHub Pages
+                            </a>
+                            <a href="https://linkedin.com/" target="_blank" rel="noopener noreferrer" class="px-4 py-2.5 rounded-xl bg-blue-600 text-white text-xs sm:text-sm font-bold flex items-center gap-2 hover:scale-105 transition">
+                                <i class="fa-brands fa-linkedin text-base"></i> LinkedIn
+                            </a>
+                            <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-pink-500 to-amber-500 text-white text-xs sm:text-sm font-bold flex items-center gap-2 hover:scale-105 transition">
+                                <i class="fa-brands fa-instagram text-base"></i> Instagram
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Quick Text-First Contact Form -->
+                    <form id="contact-form" class="lg:col-span-5 space-y-3 bg-white/60 dark:bg-slate-900/60 p-5 sm:p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-sky-400" data-i18n="form_title">Kirim Pesan Teks Cepat</span>
+                            <span class="text-[11px] text-emerald-500 font-semibold"><i class="fa-solid fa-comment-dots"></i> Text-Friendly</span>
+                        </div>
+                        <div>
+                            <label for="sender-name" class="block text-xs font-semibold mb-1" data-i18n="form_name">Nama Anda</label>
+                            <input id="sender-name" type="text" required="" placeholder="Contoh: Budi Santoso" class="w-full px-3.5 py-2.5 rounded-xl text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label for="sender-msg" class="block text-xs font-semibold mb-1" data-i18n="form_msg">Pesan / Topik Kolaborasi</label>
+                            <textarea id="sender-msg" rows="3" required="" placeholder="Halo Aisyah, mari berdiskusi tentang proyek UI/UX atau aplikasi inklusif UMG..." class="w-full px-3.5 py-2.5 rounded-xl text-sm bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:border-blue-500"></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-sky-500 text-white font-display font-bold text-xs sm:text-sm shadow-lg shadow-blue-500/25 hover:opacity-95 transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span data-i18n="form_submit">Kirim Pesan Visual</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 border-t border-slate-200/80 dark:border-slate-800/80 py-8 px-4 sm:px-6 lg:px-10 glass-panel">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400">
+            <div class="flex items-center gap-2">
+                <span class="font-bold text-slate-800 dark:text-slate-200">Aisyah Grisseeta Az-Zahra</span>
+                <span>•</span>
+                <span>Google Student Ambassador (GSAID26B21662)</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <span data-i18n="footer_credit">S1 Teknik Informatika — Universitas Muhammadiyah Gresik (UMG)</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ================= JAVASCRIPT: THREE.JS 3D SCENE, 3D TILT, THEME, & BILINGUAL I18N ================= -->
+    <script>
+        /* --------------------------------------------------------------------------
+         * 0. SMART IMAGE FALLBACK HANDLER (Supports multiple filenames seamlessly)
+         * -------------------------------------------------------------------------- */
+        function handleImageFallback(imgEl, fallbackId) {
+            const altSrc = imgEl.getAttribute('data-alt-src');
+            if (altSrc && imgEl.src.indexOf(altSrc) === -1) {
+                imgEl.src = altSrc;
+                return;
+            }
+            imgEl.classList.add('hidden');
+            const fb = document.getElementById(fallbackId);
+            if (fb) fb.classList.remove('hidden');
+        }
+
+        /* --------------------------------------------------------------------------
+         * 1. BILINGUAL DICTIONARY (ID / EN) & INSTANT TRANSLATOR
+         * -------------------------------------------------------------------------- */
+        const translations = {
+            id: {
+                nav_home: "Beranda",
+                nav_about: "Tentang & GSA",
+                nav_gallery: "Galeri GSA",
+                nav_umg: "Inklusi UMG",
+                nav_projects: "Proyek",
+                nav_contact: "Kontak",
+                btn_export: "Unduh HTML",
+                a11y_title: "Aksesibilitas Kampus Inklusif UMG",
+                a11y_zoom_in: "Perbesar Teks",
+                a11y_zoom_out: "Perkecil Teks",
+                a11y_font: "Font Hyperlegible",
+                a11y_contrast: "Kontras Tinggi",
+                a11y_pause_3d: "Jeda Animasi 3D (Fokus)",
+                hero_deaf_badge: "Deaf Tech Creator • Bisindo",
+                hero_greeting: "Halo, Selamat Datang di Ruang Kerja 3D Saya 👋",
+                hero_role_student: "S1 Teknik Informatika UMG",
+                hero_bio: "Mahasiswa Tuli Universitas Muhammadiyah Gresik (UMG) yang bersemangat membangun solusi web interaktif, teknologi aksesibel bagi penyandang disabilitas, dan desain antarmuka yang ramah pengguna (user-friendly).",
+                cta_access_app: "Buka Aplikasi Disabilitas UMG",
+                cta_projects: "Lihat Karya UI/UX & Web",
+                stat_wcag: "Desain Aksesibel",
+                stat_major: "Teknik Informatika",
+                tab_photo_wall: "Foto Google Office Wall",
+                tab_photo_poster: "Poster Resmi #TeamGoogle",
+                wall_photo_hint: "Foto Dinding 3D Google (Varsity Jacket)",
+                btn_change_photo: "Muat Foto Lokal Anda",
+                gallery_badge: "Galeri Momen #TeamGoogle",
+                gallery_title: "Perjalanan Google Student Ambassador & Inklusi Kampus",
+                gallery_subtitle: "Klik salah satu kartu di bawah untuk menampilkan foto tersebut sebagai tampilan utama di Kartu 3D Hero atas.",
+                g1_tag: "Momen Ikonik Google Space",
+                g1_title: "Aisyah di Dinding 3D Floral Google",
+                g1_desc: "Mengenakan jaket varsity resmi navy-putih berlogo Google, mewakili semangat mahasiswa Tuli S1 Teknik Informatika UMG di ekosistem teknologi global.",
+                g2_tag: "Identitas Resmi GSA 2026",
+                g2_title: "Poster Resmi #TeamGoogle (GSAID26B21662)",
+                g2_desc: "Identitas resmi Google Student Ambassador Batch 2 tahun 2026 untuk Aisyah Grisseeta Az-Zahra, membawa misi edukasi Cloud, AI, dan aksesibilitas di UMG.",
+                btn_set_hero: "Tampilkan di Kartu 3D Utama",
+                about_badge: "Profil & Dedikasi Inklusivitas",
+                about_title: "Menjembatani Teknologi, Desain, & Aksesibilitas Tuli",
+                about_subtitle: "Sebagai Mahasiswa Tuli di S1 Teknik Informatika Universitas Muhammadiyah Gresik (UMG) dan Google Student Ambassador, saya percaya bahwa teknologi terbaik adalah teknologi yang dapat diakses oleh semua orang tanpa batas.",
+                pillar_1_desc: "Membangun antarmuka web modern yang responsif, cepat, dan interaktif menggunakan HTML5 Semantik (WCAG 2.1 AA), Tailwind CSS, JavaScript, React, dan WebGL/Three.js.",
+                pillar_2_title: "Desain UI/UX Inklusif",
+                pillar_2_desc: "Merancang pengalaman pengguna berbasis visual-first, sistem umpan balik non-audio, tipografi jelas, serta alur pengguna yang ramah bagi teman Tuli maupun disabilitas lainnya.",
+                pillar_3_desc: "Terpilih dalam #TeamGoogle (ID: GSAID26B21662) untuk menginspirasi komunitas kampus UMG melalui pemanfaatan teknologi Google, AI untuk aksesibilitas, dan kolaborasi inklusif.",
+                umg_app_badge: "Simulasi Aplikasi Aksesibilitas Kampus UMG",
+                umg_app_desc: "Prototipe aplikasi web interaktif karya Aisyah untuk mendukung mahasiswa Tuli dan disabilitas di Universitas Muhammadiyah Gresik (UMG) dalam perkuliahan, komunikasi Bisindo, serta pengumuman visual kampus.",
+                tab_1_title: "Transkripsi Kelas",
+                tab_2_title: "Kamus Bisindo Kampus",
+                tab_3_title: "Bel Visual & Layanan",
+                btn_sim_lecture: "Simulasikan Suara Dosen Berikutnya",
+                btn_ask_visual: "Tanya via Teks ke Layar Dosen",
+                why_important: "Mengapa Fitur Ini Penting?",
+                caption_card_title: "Akses Setara di Ruang Kelas UMG",
+                caption_card_desc: "Mahasiswa Tuli sering mengalami kendala ketika penjelasan dosen berlangsung cepat atau tanpa teks visual. Modul ini mengubah ucapan dosen menjadi teks real-time beserta sorotan istilah koding/informatika secara otomatis.",
+                accuracy_label: "Akurasi Istilah Informatika",
+                bisindo_heading: "Kamus Visual Bisindo (Bahasa Isyarat Indonesia) Lingkungan Kampus UMG",
+                bisindo_sub: "Klik kartu kosakata di bawah untuk melihat panduan gerakan tangan visual agar mahasiswa & dosen dapat berkomunikasi inklusif.",
+                sign_1_desc: "Ayunkan telapak tangan terbuka di depan dada disertai kontak mata ramah.",
+                sign_2_desc: "Ujung jari menyentuh dagu lalu membuka ke depan dengan ekspresi tulus.",
+                sign_3_desc: "Gerakan jari mengetik di udara diikuti isyarat buku terbuka.",
+                sign_4_desc: "Kaitkan kedua jari telunjuk melambangkan sinergi mahasiswa UMG.",
+                visual_bell_title: "Sistem Peringatan Visual Kampus (Deaf-Safe Alert)",
+                visual_bell_sub: "Mengubah pengumuman pengeras suara kampus menjadi notifikasi kilat layar.",
+                visual_bell_body: "Uji coba bagaimana mahasiswa Tuli di UMG menerima informasi pergantian jam kuliah, panggilan antrean akademik, atau peringatan darurat melalui indikator cahaya visual.",
+                volunteer_title: "Jaringan Relawan Note-Taker & Pendamping UMG",
+                volunteer_sub: "Kolaborasi mahasiswa Teknik Informatika UMG",
+                proj_badge: "Portofolio Pilihan",
+                proj_heading: "Karya Frontend & Desain UI/UX Interaktif",
+                proj_hint: "Arahkan kursor atau sentuh kartu proyek di bawah untuk merasakan efek perspektif 3D Tilt.",
+                p1_desc: "Platform terpadu untuk mahasiswa penyandang disabilitas di Universitas Muhammadiyah Gresik. Dilengkapi transkripsi kuliah langsung, kamus Bisindo, dan pengingat akademik visual.",
+                p2_desc: "Penyelenggaraan Masterclass NotebookLM ('Ubah Tumpukan PDF Jadi Podcast & Ringkasan Instan') serta edukasi Google Cloud & AI bagi mahasiswa Universitas Muhammadiyah Gresik.",
+                p3_desc: "Pustaka komponen UI ramah Tuli berstandar kontras tinggi yang dipadukan dengan advokasi seni pertunjukan Puisi Bahasa Isyarat (Bisindo) di panggung kampus UMG.",
+                btn_try_demo: "Coba Demo di Atas",
+                btn_view_case: "Ringkasan Studi Kasus",
+                btn_test_ui: "Uji Mikro-Interaksi",
+                contact_badge: "Mari Berkolaborasi",
+                contact_heading: "Siap Membangun Web yang Lebih Inklusif & Interaktif?",
+                contact_desc: "Sebagai mahasiswa Tuli di S1 Teknik Informatika UMG, saya sangat nyaman berkomunikasi melalui pesan tertulis (Email, LinkedIn, GitHub, atau WhatsApp Chat). Mari berdiskusi tentang proyek Frontend, UI/UX, atau kolaborasi Google Student Ambassador!",
+                form_title: "Kirim Pesan Teks Cepat",
+                form_name: "Nama Anda",
+                form_msg: "Pesan / Topik Kolaborasi",
+                form_submit: "Kirim Pesan Visual",
+                footer_credit: "S1 Teknik Informatika — Universitas Muhammadiyah Gresik (UMG)"
+            },
+            en: {
+                nav_home: "Home",
+                nav_about: "About & GSA",
+                nav_gallery: "GSA Gallery",
+                nav_umg: "UMG Inclusion",
+                nav_projects: "Projects",
+                nav_contact: "Contact",
+                btn_export: "Download HTML",
+                a11y_title: "UMG Inclusive Campus Accessibility",
+                a11y_zoom_in: "Increase Text",
+                a11y_zoom_out: "Decrease Text",
+                a11y_font: "Hyperlegible Font",
+                a11y_contrast: "High Contrast",
+                a11y_pause_3d: "Toggle 3D Motion (Focus)",
+                hero_deaf_badge: "Deaf Tech Creator • Bisindo Sign",
+                hero_greeting: "Hello, Welcome to My Interactive 3D Workspace 👋",
+                hero_role_student: "B.Sc. Informatics Engineering UMG",
+                hero_bio: "Deaf Informatics student at Universitas Muhammadiyah Gresik (UMG) passionate about building interactive web solutions, accessible technology for students with disabilities, and user-friendly UI/UX designs.",
+                cta_access_app: "Launch UMG Disability App",
+                cta_projects: "Explore UI/UX & Web Works",
+                stat_wcag: "Accessible Design",
+                stat_major: "Informatics UMG",
+                tab_photo_wall: "Google Office Wall Photo",
+                tab_photo_poster: "Official #TeamGoogle Poster",
+                wall_photo_hint: "Google 3D Floral Wall Photo (Varsity Jacket)",
+                btn_change_photo: "Load Your Local Photo",
+                gallery_badge: "#TeamGoogle Moments Gallery",
+                gallery_title: "Google Student Ambassador Journey & Campus Inclusion",
+                gallery_subtitle: "Click either card below to feature that photo inside the main 3D Hero Profile Card above.",
+                g1_tag: "Iconic Google Space Moment",
+                g1_title: "Aisyah at the Google 3D Floral Wall",
+                g1_desc: "Wearing the official navy-and-white Google varsity jacket, representing Deaf Informatics Engineering students from UMG in the global tech ecosystem.",
+                g2_tag: "Official GSA 2026 Identity",
+                g2_title: "Official #TeamGoogle Poster (GSAID26B21662)",
+                g2_desc: "Official Google Student Ambassador 2026 Batch 2 poster for Aisyah Grisseeta Az-Zahra, driving Cloud, AI, and accessibility education at UMG.",
+                btn_set_hero: "Feature in Main 3D Card",
+                about_badge: "Profile & Inclusive Dedication",
+                about_title: "Bridging Technology, Design, & Deaf Accessibility",
+                about_subtitle: "As a Deaf student in Informatics Engineering at Universitas Muhammadiyah Gresik (UMG) and a Google Student Ambassador, I believe the best technology empowers everyone without barriers.",
+                pillar_1_desc: "Crafting responsive, fast, and interactive modern web interfaces using Semantic HTML5 (WCAG 2.1 AA), Tailwind CSS, JavaScript, React, and WebGL/Three.js.",
+                pillar_2_title: "Inclusive UI/UX Design",
+                pillar_2_desc: "Designing visual-first user experiences, non-audio feedback cues, clear typography, and intuitive user flows tailored for Deaf and disabled communities.",
+                pillar_3_desc: "Selected for #TeamGoogle (ID: GSAID26B21662) to empower UMG campus peers through Google technologies, AI for accessibility, and inclusive tech events.",
+                umg_app_badge: "UMG Campus Accessibility App Simulator",
+                umg_app_desc: "An interactive web application prototype by Aisyah designed to empower Deaf and disabled students at Universitas Muhammadiyah Gresik (UMG) with live lecture captions, Bisindo sign modules, and visual alerts.",
+                tab_1_title: "Live Classroom Captions",
+                tab_2_title: "Campus Bisindo Sign",
+                tab_3_title: "Visual Bell & Support",
+                btn_sim_lecture: "Simulate Next Lecturer Voice",
+                btn_ask_visual: "Send Text Question to Lecturer Screen",
+                why_important: "Why Does This Matter?",
+                caption_card_title: "Equal Access in UMG Classrooms",
+                caption_card_desc: "Deaf students often face barriers when lectures move quickly without visual text. This module converts spoken lectures into real-time captions while automatically highlighting computer science terminology.",
+                accuracy_label: "CS Terminology Accuracy",
+                bisindo_heading: "Interactive Bisindo (Indonesian Sign Language) Dictionary for UMG",
+                bisindo_sub: "Click any vocabulary card below to view visual hand-movement guides so students and lecturers can communicate inclusively.",
+                sign_1_desc: "Wave an open palm gently in front of the chest with warm eye contact.",
+                sign_2_desc: "Touch fingertips to chin and extend forward with a sincere smile.",
+                sign_3_desc: "Simulate typing fingers in the air followed by an open-book gesture.",
+                sign_4_desc: "Hook both index fingers together symbolizing equal UMG student synergy.",
+                visual_bell_title: "Campus Visual Alert System (Deaf-Safe Alert)",
+                visual_bell_sub: "Converts loudspeaker announcements into visual screen flash notifications.",
+                visual_bell_body: "Test how Deaf students at UMG receive class-change alerts, academic administration queue calls, or emergency alerts via visual lighting cues.",
+                volunteer_title: "UMG Peer Note-Taker & Buddy Network",
+                volunteer_sub: "Informatics Engineering Student Collaboration",
+                proj_badge: "Selected Portfolio",
+                proj_heading: "Interactive Frontend & UI/UX Design Works",
+                proj_hint: "Hover or touch the project cards below to experience the interactive 3D Tilt perspective.",
+                p1_desc: "Unified portal for students with disabilities at Universitas Muhammadiyah Gresik featuring live classroom captions, Bisindo dictionary, and visual reminders.",
+                p2_desc: "Hosted the NotebookLM Masterclass ('Turn Stacks of PDFs into Instant Podcasts & Summaries') and Google Cloud/AI workshops for UMG students.",
+                p3_desc: "High-contrast Deaf-friendly UI component library paired with Indonesian Sign Language (Bisindo) stage poetry advocacy at UMG.",
+                btn_try_demo: "Try Live Demo Above",
+                btn_view_case: "View Case Study Summary",
+                btn_test_ui: "Test Micro-Interaction",
+                contact_badge: "Let's Collaborate",
+                contact_heading: "Ready to Build a More Inclusive & Interactive Web?",
+                contact_desc: "As a Deaf Informatics student at UMG, I thrive in text-based communication (Email, LinkedIn, GitHub, or WhatsApp Chat). Let's connect for Frontend, UI/UX, or Google Student Ambassador collaborations!",
+                form_title: "Send Quick Text Message",
+                form_name: "Your Name",
+                form_msg: "Message / Collaboration Topic",
+                form_submit: "Send Visual Message",
+                footer_credit: "B.Sc. Informatics Engineering — Universitas Muhammadiyah Gresik (UMG)"
+            }
+        };
+
+        let currentLang = localStorage.getItem('aisyah_lang') || 'id';
+        let currentPhotoMode = 'wall'; // 'wall' (Google 3D Wall photo) or 'poster' (Official GSA Poster)
+
+        function switchProfilePhoto(mode) {
+            currentPhotoMode = mode;
+            const wallImg = document.getElementById('profile-img-wall');
+            const posterImg = document.getElementById('profile-img-poster');
+            const wallFallback = document.getElementById('wall-fallback');
+            const posterFallback = document.getElementById('poster-fallback');
+            const btnWall = document.getElementById('switch-photo-wall');
+            const btnPoster = document.getElementById('switch-photo-poster');
+            const cardBg = document.getElementById('hero-card-bg');
+            const badgePill = document.getElementById('hero-card-badge-pill');
+
+            if (mode === 'wall') {
+                btnWall.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-blue-600 text-white shadow flex items-center gap-1.5 transition";
+                btnPoster.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold hover:bg-blue-500/10 text-slate-700 dark:text-slate-200 flex items-center gap-1.5 transition";
+                cardBg.className = "relative rounded-[22px] overflow-hidden bg-gradient-to-b from-stone-800 via-slate-900 to-blue-950 text-white p-5 flex flex-col items-center justify-between min-h-[520px] transition-all duration-500";
+                badgePill.innerHTML = `<span class="text-blue-600">G</span><span class="text-red-500">o</span><span class="text-amber-500">o</span><span class="text-blue-600">g</span><span class="text-emerald-500">l</span><span class="text-red-500">e</span><span class="ml-1 text-slate-800">Space • #TeamGoogle</span>`;
+
+                posterImg.classList.add('hidden');
+                posterFallback.classList.add('hidden');
+
+                if (wallImg.complete && wallImg.naturalWidth > 0) {
+                    wallImg.classList.remove('hidden');
+                    wallFallback.classList.add('hidden');
+                } else {
+                    wallImg.classList.add('hidden');
+                    wallFallback.classList.remove('hidden');
+                }
+            } else {
+                btnPoster.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold bg-blue-600 text-white shadow flex items-center gap-1.5 transition";
+                btnWall.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold hover:bg-blue-500/10 text-slate-700 dark:text-slate-200 flex items-center gap-1.5 transition";
+                cardBg.className = "relative rounded-[22px] overflow-hidden bg-gradient-to-b from-sky-200 via-blue-500 to-blue-700 text-white p-5 flex flex-col items-center justify-between min-h-[520px] transition-all duration-500";
+                badgePill.innerHTML = `<span>#TeamGoogle</span> <i class="fa-solid fa-sparkles text-amber-400 text-lg"></i>`;
+
+                wallImg.classList.add('hidden');
+                wallFallback.classList.add('hidden');
+
+                if (posterImg.complete && posterImg.naturalWidth > 0) {
+                    posterImg.classList.remove('hidden');
+                    posterFallback.classList.add('hidden');
+                } else {
+                    posterImg.classList.add('hidden');
+                    posterFallback.classList.remove('hidden');
+                }
+            }
+        }
+
+        function applyLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('aisyah_lang', lang);
+            document.documentElement.lang = lang;
+            document.getElementById('lang-label').textContent = lang.toUpperCase();
+
+            const dict = translations[lang];
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (dict[key]) {
+                    el.textContent = dict[key];
+                }
+            });
+        }
+
+        /* --------------------------------------------------------------------------
+         * 2. VISUAL NOTIFICATION HELPER (DEAF-FRIENDLY VISUAL FEEDBACK)
+         * -------------------------------------------------------------------------- */
+        let toastTimeout;
+        function showVisualAlert(title, message) {
+            const toast = document.getElementById('visual-toast');
+            document.getElementById('toast-title').textContent = title;
+            document.getElementById('toast-msg').textContent = message;
+
+            toast.classList.remove('translate-x-[120%]', 'visual-alert-active');
+            void toast.offsetWidth;
+            toast.classList.add('visual-alert-active');
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('translate-x-[120%]');
+            }, 4200);
+        }
+
+        function triggerBisindoPreview(term, instruction) {
+            showVisualAlert(`Bisindo: ${term}`, instruction);
+        }
+
+        /* --------------------------------------------------------------------------
+         * 3. DARK / LIGHT MODE WITH LOCALSTORAGE & THREE.JS SYNC
+         * -------------------------------------------------------------------------- */
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('aisyah_theme') || 'dark';
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+                themeIcon.className = 'fa-solid fa-sun text-sm';
+            } else {
+                document.documentElement.classList.remove('dark');
+                themeIcon.className = 'fa-solid fa-moon text-sm';
+            }
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('aisyah_theme', isDark ? 'dark' : 'light');
+            themeIcon.className = isDark ? 'fa-solid fa-sun text-sm' : 'fa-solid fa-moon text-sm';
+            updateThreeTheme(isDark);
+            showVisualAlert(
+                currentLang === 'id' ? 'Tema Diubah' : 'Theme Updated',
+                isDark
+                    ? (currentLang === 'id' ? 'Mode Gelap (Dark Mode) Aktif' : 'Dark Mode Activated')
+                    : (currentLang === 'id' ? 'Mode Terang (Light Mode) Aktif' : 'Light Mode Activated')
+            );
+        });
+
+        /* --------------------------------------------------------------------------
+         * 4. INTERACTIVE 3D TILT EFFECT FOR PROFILE & PROJECT CARDS
+         * -------------------------------------------------------------------------- */
+        function initTiltCards() {
+            const cards = document.querySelectorAll('[data-tilt]');
+            cards.forEach(card => {
+                const glare = card.querySelector('.tilt-glare');
+
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+
+                    const rotateX = ((y - centerY) / centerY) * -9;
+                    const rotateY = ((x - centerX) / centerX) * 9;
+
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.015, 1.015, 1.015)`;
+
+                    if (glare) {
+                        const percentX = (x / rect.width) * 100;
+                        const percentY = (y / rect.height) * 100;
+                        glare.style.background = `radial-gradient(circle at ${percentX}% ${percentY}%, rgba(255,255,255,0.28), transparent 60%)`;
+                        glare.style.opacity = '1';
+                    }
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+                    if (glare) glare.style.opacity = '0';
+                });
+            });
+        }
+
+        /* --------------------------------------------------------------------------
+         * 5. THREE.JS INTERACTIVE 3D BACKGROUND (PARTICLES + GEOMETRIC WIREFRAME)
+         * -------------------------------------------------------------------------- */
+        let scene, camera, renderer, particlesMesh, wireframeMesh, innerCoreMesh;
+        let mouseX = 0, mouseY = 0;
+        let is3DPaused = false;
+
+        function initThreeJS() {
+            const canvas = document.getElementById('bg-canvas');
+            scene = new THREE.Scene();
+
+            camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 26;
+
+            renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            // 1. Floating Particle Field
+            const particleCount = 650;
+            const posArray = new Float32Array(particleCount * 3);
+            for (let i = 0; i < particleCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 75;
+            }
+            const particlesGeo = new THREE.BufferGeometry();
+            particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+            const isDark = document.documentElement.classList.contains('dark');
+            const particlesMat = new THREE.PointsMaterial({
+                size: 0.16,
+                color: isDark ? 0x38bdf8 : 0x2563eb,
+                transparent: true,
+                opacity: isDark ? 0.75 : 0.45
+            });
+            particlesMesh = new THREE.Points(particlesGeo, particlesMat);
+            scene.add(particlesMesh);
+
+            // 2. Interactive 3D Wireframe Icosahedron
+            const icoGeo = new THREE.IcosahedronGeometry(9.5, 1);
+            const icoMat = new THREE.MeshBasicMaterial({
+                color: isDark ? 0x4285f4 : 0x1d4ed8,
+                wireframe: true,
+                transparent: true,
+                opacity: isDark ? 0.18 : 0.12
+            });
+            wireframeMesh = new THREE.Mesh(icoGeo, icoMat);
+            wireframeMesh.position.set(8, 1, -5);
+            scene.add(wireframeMesh);
+
+            // 3. Secondary Octahedron Core
+            const coreGeo = new THREE.OctahedronGeometry(4.5, 0);
+            const coreMat = new THREE.MeshBasicMaterial({
+                color: 0x38bdf8,
+                wireframe: true,
+                transparent: true,
+                opacity: isDark ? 0.25 : 0.15
+            });
+            innerCoreMesh = new THREE.Mesh(coreGeo, coreMat);
+            innerCoreMesh.position.set(8, 1, -5);
+            scene.add(innerCoreMesh);
+
+            window.addEventListener('mousemove', (e) => {
+                mouseX = (e.clientX / window.innerWidth) - 0.5;
+                mouseY = (e.clientY / window.innerHeight) - 0.5;
+            });
+
+            window.addEventListener('touchmove', (e) => {
+                if (e.touches.length > 0) {
+                    mouseX = (e.touches[0].clientX / window.innerWidth) - 0.5;
+                    mouseY = (e.touches[0].clientY / window.innerHeight) - 0.5;
+                }
+            }, { passive: true });
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+
+            animateThreeJS();
+        }
+
+        function updateThreeTheme(isDark) {
+            if (!particlesMesh || !wireframeMesh) return;
+            particlesMesh.material.color.setHex(isDark ? 0x38bdf8 : 0x2563eb);
+            particlesMesh.material.opacity = isDark ? 0.75 : 0.45;
+            wireframeMesh.material.color.setHex(isDark ? 0x4285f4 : 0x1d4ed8);
+            wireframeMesh.material.opacity = isDark ? 0.18 : 0.12;
+        }
+
+        function animateThreeJS() {
+            requestAnimationFrame(animateThreeJS);
+            if (is3DPaused) return;
+
+            particlesMesh.rotation.y += 0.0009;
+            particlesMesh.rotation.x += 0.0004;
+
+            wireframeMesh.rotation.x += 0.0025;
+            wireframeMesh.rotation.y += 0.0035;
+
+            innerCoreMesh.rotation.x -= 0.004;
+            innerCoreMesh.rotation.y -= 0.005;
+
+            camera.position.x += (mouseX * 6 - camera.position.x) * 0.05;
+            camera.position.y += (-mouseY * 6 - camera.position.y) * 0.05;
+            camera.lookAt(scene.position);
+
+            renderer.render(scene, camera);
+        }
+
+        /* --------------------------------------------------------------------------
+         * 6. UMG ACCESSHUB INTERACTIVE SIMULATORS & ACCESSIBILITY WIDGET
+         * -------------------------------------------------------------------------- */
+        function initUMGAccessHub() {
+            const tabBtns = document.querySelectorAll('.umg-tab-btn');
+            const tabContents = document.querySelectorAll('.umg-tab-content');
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const target = btn.getAttribute('data-tab');
+                    tabBtns.forEach(b => {
+                        b.classList.remove('bg-blue-600', 'text-white', 'shadow-md');
+                        b.classList.add('bg-slate-200/70', 'dark:bg-slate-800');
+                    });
+                    btn.classList.add('bg-blue-600', 'text-white', 'shadow-md');
+                    btn.classList.remove('bg-slate-200/70', 'dark:bg-slate-800');
+
+                    tabContents.forEach(content => {
+                        content.classList.toggle('hidden', content.id !== target);
+                    });
+                });
+            });
+
+            const lectureLines = [
+                {
+                    speaker: "Dosen Pengampu (Rekayasa Perangkat Lunak):",
+                    text: "\"Pada pengembangan aplikasi UMG AccessHub, pastikan setiap tombol memiliki atribut aria-label dan kontras warna minimal 4.5:1.\""
+                },
+                {
+                    speaker: "Aisyah Grisseeta (Pertanyaan Teks Mahasiswa):",
+                    text: "\"Pak, apakah kita bisa menambahkan integrasi WebGL Three.js untuk visualisasi bahasa isyarat Bisindo 3D?\""
+                },
+                {
+                    speaker: "Dosen Pengampu:",
+                    text: "\"Ide luar biasa Aisyah! Itu sangat membantu mahasiswa Tuli baru di UMG. Mari kita jadikan proyek unggulan semester ini.\""
+                }
+            ];
+            let lineIndex = 0;
+
+            document.getElementById('btn-sim-caption').addEventListener('click', () => {
+                const box = document.getElementById('transcript-box');
+                const item = lectureLines[lineIndex % lectureLines.length];
+                lineIndex++;
+
+                const div = document.createElement('div');
+                div.className = "p-3 rounded-xl bg-slate-800/90 border-l-4 border-sky-400 transition-all";
+                div.innerHTML = `
+                    <span class="text-[11px] font-bold text-sky-400 block">${item.speaker}</span>
+                    <p class="text-sm sm:text-base font-medium mt-0.5">${item.text}</p>
+                `;
+                box.appendChild(div);
+                box.scrollTop = box.scrollHeight;
+
+                showVisualAlert(
+                    currentLang === 'id' ? 'Transkripsi Baru' : 'New Live Caption',
+                    currentLang === 'id' ? 'Suara dosen berhasil dikonversi ke teks visual.' : 'Lecturer speech converted to visual text.'
+                );
+            });
+
+            document.getElementById('btn-raise-hand').addEventListener('click', () => {
+                showVisualAlert(
+                    currentLang === 'id' ? 'Interaksi Kelas Inklusif' : 'Inclusive Classroom',
+                    currentLang === 'id'
+                        ? 'Indikator Angkat Tangan Visual dikirim ke layar proyektor dosen!'
+                        : 'Visual Hand-Raise indicator sent to the lecturer projector!'
+                );
+            });
+
+            // Local Photo File Preview
+            const photoInput = document.getElementById('photo-upload');
+            photoInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(evt) {
+                        if (currentPhotoMode === 'wall') {
+                            const wallImg = document.getElementById('profile-img-wall');
+                            const galleryWall = document.getElementById('gallery-img-wall');
+                            wallImg.src = evt.target.result;
+                            wallImg.classList.remove('hidden');
+                            document.getElementById('wall-fallback').classList.add('hidden');
+                            if (galleryWall) {
+                                galleryWall.src = evt.target.result;
+                                galleryWall.classList.remove('hidden');
+                                document.getElementById('gallery-wall-fallback').classList.add('hidden');
+                            }
+                        } else {
+                            const posterImg = document.getElementById('profile-img-poster');
+                            const galleryPoster = document.getElementById('gallery-img-poster');
+                            posterImg.src = evt.target.result;
+                            posterImg.classList.remove('hidden');
+                            document.getElementById('poster-fallback').classList.add('hidden');
+                            if (galleryPoster) {
+                                galleryPoster.src = evt.target.result;
+                                galleryPoster.classList.remove('hidden');
+                                document.getElementById('gallery-poster-fallback').classList.add('hidden');
+                            }
+                        }
+                        showVisualAlert(
+                            currentLang === 'id' ? 'Foto Berhasil Dimuat!' : 'Photo Loaded!',
+                            currentLang === 'id'
+                                ? 'Foto Aisyah berhasil ditampilkan pada Kartu 3D & Galeri.'
+                                : 'Aisyah photo is now displayed in the 3D Card & Gallery.'
+                        );
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Accessibility Quick Drawer Controls
+            const a11yToggle = document.getElementById('a11y-toggle');
+            const a11yPanel = document.getElementById('a11y-panel');
+            const closeA11y = document.getElementById('close-a11y');
+            let fontScale = 1;
+
+            a11yToggle.addEventListener('click', () => a11yPanel.classList.toggle('hidden'));
+            closeA11y.addEventListener('click', () => a11yPanel.classList.add('hidden'));
+
+            document.getElementById('btn-font-inc').addEventListener('click', () => {
+                fontScale = Math.min(1.25, fontScale + 0.08);
+                document.documentElement.style.setProperty('--font-scale', fontScale);
+                showVisualAlert('Aksesibilitas Teks', `Ukuran teks diperbesar (${Math.round(fontScale * 100)}%)`);
+            });
+
+            document.getElementById('btn-font-dec').addEventListener('click', () => {
+                fontScale = Math.max(0.9, fontScale - 0.08);
+                document.documentElement.style.setProperty('--font-scale', fontScale);
+                showVisualAlert('Aksesibilitas Teks', `Ukuran teks disesuaikan (${Math.round(fontScale * 100)}%)`);
+            });
+
+            document.getElementById('btn-readable-font').addEventListener('click', () => {
+                const active = document.body.classList.toggle('readable-font');
+                showVisualAlert('Font Hyperlegible', active ? 'Font ramah baca (Atkinson Hyperlegible) aktif' : 'Font standar aktif');
+            });
+
+            document.getElementById('btn-contrast').addEventListener('click', () => {
+                const active = document.body.classList.toggle('high-contrast');
+                showVisualAlert('Mode Kontras', active ? 'Kontras Tinggi Diaktifkan' : 'Kontras Standar Diaktifkan');
+            });
+
+            document.getElementById('btn-motion').addEventListener('click', () => {
+                is3DPaused = !is3DPaused;
+                showVisualAlert('Animasi 3D', is3DPaused ? 'Animasi 3D dijeda untuk fokus baca' : 'Animasi 3D dilanjutkan');
+            });
+
+            // Contact Form Submission
+            document.getElementById('contact-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const name = document.getElementById('sender-name').value;
+                showVisualAlert(
+                    currentLang === 'id' ? 'Pesan Terkirim!' : 'Message Sent!',
+                    currentLang === 'id'
+                        ? `Terima kasih ${name}! Pesan teks Anda telah diterima oleh Aisyah.`
+                        : `Thank you ${name}! Your text message has been received by Aisyah.`
+                );
+                e.target.reset();
+            });
+
+            // Clean Single-File HTML Export for GitHub Pages (Strips any preview scripts)
+            document.getElementById('download-btn').addEventListener('click', () => {
+                const clonedDoc = document.cloneNode(true);
+                clonedDoc.querySelectorAll('[data-bard-client-injected="true"]').forEach(el => el.remove());
+                const htmlContent = '<!DOCTYPE html>\n' + clonedDoc.documentElement.outerHTML;
+                const blob = new Blob([htmlContent], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'index.html';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showVisualAlert('Siap Deploy GitHub Pages', 'File index.html bersih berhasil diunduh!');
+            });
+        }
+
+        /* --------------------------------------------------------------------------
+         * 7. INITIALIZE EVERYTHING ON WINDOW LOAD
+         * -------------------------------------------------------------------------- */
+        window.onload = function () {
+            initTheme();
+            applyLanguage(currentLang);
+
+            document.getElementById('lang-toggle').addEventListener('click', () => {
+                const nextLang = currentLang === 'id' ? 'en' : 'id';
+                applyLanguage(nextLang);
+                showVisualAlert(
+                    nextLang === 'id' ? 'Bahasa Indonesia Aktif' : 'English Language Active',
+                    nextLang === 'id' ? 'Seluruh konten diterjemahkan ke Bahasa Indonesia.' : 'All content translated to English.'
+                );
+            });
+
+            initThreeJS();
+            initTiltCards();
+            initUMGAccessHub();
+        };
+    </script>
+
+</body></html>
